@@ -1,3 +1,12 @@
+@keyframes fade-in {
+    from {
+        background-color: rgb(224, 224, 224);
+    }
+    to {
+        background-color: rgb(240, 240, 240);
+    }
+}
+
 .wrapper {
     container-type: inline-size;
 
@@ -18,12 +27,47 @@
 .image-container {
     grid-area: 1 / 1 / -1 / 2;
 
+    display: flex;
+    justify-content: center;
+
     width: 100%;
     min-width: 600px;
     height: 100%;
 
     border-radius: 8px;
     background-color: rgb(44, 44, 44);
+}
+
+.start-game-button {
+    place-self: center;
+
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 1.2rem;
+    font-family: Gabarito;
+    text-align: center;
+    text-decoration: none;
+    border: 0.1rem solid rgba(255, 255, 255, 0.0);
+    border-radius: 0.4rem;
+    background-color: rgb(224, 224, 224);
+
+    padding: 0.3rem 0.8rem;
+
+    transition: transform 0.25s ease-in-out 0s;
+}
+.start-game-button:hover {
+    animation: 0.25s ease-in-out 0.0s 1 normal forwards fade-in;
+}
+
+@media (hover: hover) {
+    .start-game-button:hover {
+        transform: scale(107%);
+        outline: 1px solid white;
+    }
+}
+
+.start-game-button:focus {
+    transform: scale(107%);
+    outline: 2px solid white;
 }
 
 .characters-remaining-container {
