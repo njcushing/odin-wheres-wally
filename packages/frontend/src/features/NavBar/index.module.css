@@ -1,12 +1,23 @@
+@keyframes fade-in {
+    from {
+        opacity: 0%;
+        transform: translateY(0.5rem);
+    }
+    to {
+        opacity: 100%;
+        transform: translateY(0rem);
+    }
+}
+
 .wrapper {
     container-type: inline-size;
     
-    width: 100%;
+    width: auto;
 }
 
 .navigation-buttons-list {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     gap: 0.15rem;
 
     list-style: none;
@@ -19,5 +30,5 @@
     display: flex;
     justify-content: center;
 
-    width: 100%;
+    animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
 }
