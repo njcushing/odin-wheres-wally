@@ -4,6 +4,7 @@ import styles from "./index.module.css";
 import * as fetchAPI from "./utils/fetchAPI.js";
 
 const Game = () => {
+    const [gameStarted, setGameStarted] = useState(false);
     const [characters, setCharacters] = useState([]);
 
     useEffect(() => {
@@ -15,6 +16,20 @@ const Game = () => {
         <div className={styles["wrapper"]}>
         <div className={styles["container"]}>
             <div className={styles["image-container"]}>
+                {gameStarted
+                ?   null
+                :   <button
+                        className={styles["start-game-button"]}
+                        onClick={(e) => {
+                            e.target.blur();
+                            e.preventDefault();
+                            setGameStarted(true);
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.blur();
+                        }}
+                    >Start Game</button>
+                } 
             </div>
             <div className={styles["characters-remaining-container"]}>
                 <h3

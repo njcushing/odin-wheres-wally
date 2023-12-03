@@ -31,4 +31,18 @@ describe("UI/DOM Testing...", () => {
             expect(characters.length).toBe(3);
         });
     });
+    describe("The 'Start Game' button...", () => {
+        test("Should exist on the page by default", () => {
+            renderComponent();
+            const startGameButton = screen.getByRole("button", { name: /Start Game/i });
+            expect(startGameButton).toBeInTheDocument();
+        });
+        test("When clicked, should be removed", async () => {
+            const user = userEvent.setup();
+            renderComponent();
+            const startGameButton = screen.getByRole("button", { name: /Start Game/i });
+            await user.click(startGameButton);
+            expect(startGameButton).not.toBeInTheDocument();
+        });
+    });
 });
