@@ -11,6 +11,14 @@ const renderComponent = () => {
     render(<Landing />);
 }
 
+vi.mock('@/features/NavBar', () => ({ 
+    default: ({
+        options
+    }) => {
+        return (<></>);
+    }
+}));
+
 describe("UI/DOM Testing...", () => {
     describe("The title element...", () => {
         test("Should exist on the page", () => {
@@ -18,5 +26,12 @@ describe("UI/DOM Testing...", () => {
             const title = screen.getByRole("heading", { name: "title" });
             expect(title).toBeInTheDocument();
         });
-    })
+    });
+    describe("The introductory paragraphs...", () => {
+        test("Should exist on the page", () => {
+            renderComponent();
+            const title = screen.getAllByLabelText("introduction");
+            expect(title.length).not.toBe(0);
+        });
+    });
 });
