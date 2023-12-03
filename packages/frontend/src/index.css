@@ -19,7 +19,10 @@
     color: rgba(255, 255, 255, 0.87);
     background-color: rgb(22, 22, 22);
 
-    padding: 0.8rem;
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 0rem;
     margin: 0rem;
   
     font-synthesis: none;

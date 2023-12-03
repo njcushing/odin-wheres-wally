@@ -1,14 +1,3 @@
-@keyframes fade-in {
-    from {
-        opacity: 0%;
-        transform: translateY(0.5rem);
-    }
-    to {
-        opacity: 100%;
-        transform: translateY(0rem);
-    }
-}
-
 .wrapper {
     container-type: inline-size;
     
@@ -29,6 +18,4 @@
 .navigation-button {
     display: flex;
     justify-content: center;
-
-    animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
 }

@@ -4,7 +4,9 @@ import Router from "./routes/Router.jsx";
 
 const App = () => {
     return (
-        <Router />
+        <div className={styles["app"]}>
+            <Router />
+        </div>
     )
 };
 
