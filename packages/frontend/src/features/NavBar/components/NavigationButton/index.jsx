@@ -11,11 +11,14 @@ const NavigationButton = ({
         <div className={styles["wrapper"]}>
             <Link
                 to={link}
-                className={styles["NavigationButton"]}
+                className={styles["button"]}
                 onClick={(e) => {
                     onClickHandler(e);
                     e.target.blur();
                     e.preventDefault();
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.blur();
                 }}
             >{text}
             </Link>

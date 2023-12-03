@@ -1,0 +1,38 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+    max-width: 14rem;
+    height: 2.30rem;
+    padding: 0.24rem;
+}
+
+.button {
+    align-self: center;
+
+    color: rgba(255, 255, 255, 1.0);
+    font-size: 1.2rem;
+    font-family: Gabarito;
+    text-align: center;
+    text-decoration: none;
+    border: 0.1rem solid rgba(255, 255, 255, 0.0);
+    border-radius: 0.4rem;
+
+    width: 100%;
+    padding: 0.3rem 0.8rem;
+
+    transition: transform 0.25s ease-in-out 0s;
+}
+
+@media (hover: hover) {
+    .button:hover {
+        transform: scale(107%);
+        outline: 1px solid white;
+    }
+}
+
+.button:focus {
+    transform: scale(107%);
+    outline: 2px solid white;
+}
