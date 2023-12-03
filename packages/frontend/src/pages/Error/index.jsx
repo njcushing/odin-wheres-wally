@@ -15,7 +15,7 @@ const Error = () => {
                 <NavigationButton
                     link="/"
                     text="Go Back"
-                ></NavigationButton>
+                />
             </div>
         </div>
         </div>
