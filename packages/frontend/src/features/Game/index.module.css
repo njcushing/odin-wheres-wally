@@ -19,19 +19,42 @@
     grid-area: 1 / 1 / -1 / 2;
 
     width: 100%;
+    min-width: 600px;
     height: 100%;
 
     border-radius: 8px;
     background-color: rgb(44, 44, 44);
 }
 
-.characters-found-container {
+.characters-remaining-container {
     grid-area: 1 / 2 / -1 / -1;
-
-    width: 100%;
-    min-width: 200px;
-    height: 1000px;
 
     border-radius: 8px;
     background-color: rgb(44, 44, 44);
+
+    width: 100%;
+    min-width: 200px;
+    min-height: 1000px;
+}
+
+.characters-remaining-title {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.2rem;
+    font-family: Gabarito;
+    text-align: center;
+
+    padding: 1.2rem 0.4rem;
+    margin: 0rem;
+}
+
+.characters-remaining-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+
+    list-style: none;
+
+    padding: 0.4rem;
+    margin: 0rem;
 }
