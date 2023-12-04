@@ -22,17 +22,6 @@
     gap: 0.8rem;
 }
 
-.characters-found-container {
-    grid-area: 1 / 2 / -1 / -1;
-
-    width: 100%;
-    min-width: 200px;
-    height: 1000px;
-
-    border-radius: 8px;
-    background-color: rgb(44, 44, 44);
-}
-
 .navigation-button {
     display: flex;
     justify-content: center;
