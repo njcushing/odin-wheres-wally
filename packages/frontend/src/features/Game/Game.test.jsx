@@ -112,15 +112,15 @@ describe("UI/DOM Testing...", () => {
     describe("The Characters Drop Down Box...", () => {
         test("Should not exist on the page before the game has started", () => {
             renderComponent();
-            const charDropDown = screen.queryByRole("list", { name: "characters-drop-down-box" });
-            expect(charDropDown).toBeNull();
+            const charSelectionBox = screen.queryByRole("list", { name: "character-selection-box" });
+            expect(charSelectionBox).toBeNull();
         });
         test(`Should not exist on the page when the 'Start Game' button has just
          been clicked`, async () => {
             const user = userEvent.setup();
             await startGame(user);
-            const charDropDown = screen.queryByRole("list", { name: "characters-drop-down-box" });
-            expect(charDropDown).toBeNull();
+            const charSelectionBox = screen.queryByRole("list", { name: "character-selection-box" });
+            expect(charSelectionBox).toBeNull();
         });
         test(`Should be present when the game has started and the game image is
          clicked`, async () => {
@@ -128,8 +128,8 @@ describe("UI/DOM Testing...", () => {
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
             await user.click(gameImage);
-            const charDropDown = screen.getByRole("list", { name: "characters-drop-down-box" });
-            expect(charDropDown).toBeInTheDocument();
+            const charSelectionBox = screen.getByRole("list", { name: "character-selection-box" });
+            expect(charSelectionBox).toBeInTheDocument();
         });
         test(`If it is present, it should be removed when the game image is
          clicked`, async () => {
@@ -137,9 +137,9 @@ describe("UI/DOM Testing...", () => {
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
             await user.click(gameImage);
-            const charDropDown = screen.getByRole("list", { name: "characters-drop-down-box" });
+            const charSelectionBox = screen.getByRole("list", { name: "character-selection-box" });
             await user.click(gameImage);
-            expect(charDropDown).not.toBeInTheDocument();
+            expect(charSelectionBox).not.toBeInTheDocument();
         });
         test(`If it is present, should have the same number of options as
          characters remaining`, async () => {
