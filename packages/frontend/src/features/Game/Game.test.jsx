@@ -27,7 +27,8 @@ vi.mock('@/features/NavBar/components/NavigationButton', () => ({
     }
 }));
 
-const fetchCharacters = vi.fn(() => ["1", "2", "3"]);
+const characters = ["1", "2", "3"];
+const fetchCharacters = vi.fn(() => characters);
 vi.mock('./utils/fetchAPI', () => ({
     fetchCharacters: () => fetchCharacters,
 }));
@@ -139,6 +140,15 @@ describe("UI/DOM Testing...", () => {
             const charDropDown = screen.getByRole("list", { name: "characters-drop-down-box" });
             await user.click(gameImage);
             expect(charDropDown).not.toBeInTheDocument();
+        });
+        test(`If it is present, should have the same number of options as
+         characters remaining`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            expect(charSelectionOptions.length).toBe(characters.length);
         });
     });
 });

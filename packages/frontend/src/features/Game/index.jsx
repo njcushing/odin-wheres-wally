@@ -73,7 +73,19 @@ const Game = () => {
                         <ul
                             className={styles["characters-drop-down-box"]}
                             aria-label="characters-drop-down-box"
-                        ></ul>
+                        >
+                            {characters.map((character, i) => {
+                                return(
+                                    <li
+                                        className={styles["character-selection-option"]}
+                                        aria-label="character-selection-option"
+                                        key={i}
+                                    >
+                                        {character}
+                                    </li>
+                                );
+                            })}
+                        </ul>
                         </>
                     :   null}
                     </>
