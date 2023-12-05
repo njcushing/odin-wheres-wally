@@ -20,12 +20,13 @@
 .container {
     display: grid;
     grid-template-columns: repeat(2, auto);
+    grid-template-rows: repeat(2, auto);
     justify-items: center;
     gap: 0.8rem;
 }
 
 .image-container {
-    grid-area: 1 / 1 / -1 / 2;
+    grid-area: 1 / 1 / 2 / 2;
     justify-self: center;
 
     display: flex;
@@ -73,7 +74,7 @@
 }
 
 .characters-remaining-container {
-    grid-area: 1 / 2 / -1 / -1;
+    grid-area: 1 / 2 / 2 / -1;
     justify-self: center;
 
     border-radius: 8px;
@@ -103,4 +104,16 @@
 
     padding: 0.4rem;
     margin: 0rem;
+}
+
+.navigation-button {
+    grid-area: 2 / 1 / -1 / -1;
+
+    display: flex;
+    justify-content: center;
+
+    border-radius: 8px;
+    background-color: rgb(44, 44, 44);
+
+    width: 100%;
 }

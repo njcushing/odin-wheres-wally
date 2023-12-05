@@ -3,6 +3,8 @@ import styles from "./index.module.css";
 
 import * as fetchAPI from "./utils/fetchAPI.js";
 
+import NavigationButton from "@/features/NavBar/components/NavigationButton";
+
 const Game = () => {
     const [gameStarted, setGameStarted] = useState(false);
     const [characters, setCharacters] = useState([]);
@@ -36,7 +38,7 @@ const Game = () => {
                 className={styles["image-container"]}
                 style={{
                     position: "relative",
-                    
+
                     width: `${gameImageSize[0]}px`,
                     height: `${gameImageSize[1]}px`,
                 }}
@@ -98,6 +100,12 @@ const Game = () => {
                         )
                     })}
                 </ul>
+            </div>
+            <div className={styles["navigation-button"]}>
+                <NavigationButton
+                    link="/"
+                    text="Return to Home"
+                />
             </div>
         </div>
         </div>
