@@ -17,6 +17,16 @@ const startGame = async (user) => {
     await user.click(startGameButton);
 }
 
+vi.mock('@/features/NavBar/components/NavigationButton', () => ({ 
+    default: ({
+        text,
+        onClickHandler,
+        link,
+    }) => {
+        return (<></>);
+    }
+}));
+
 const fetchCharacters = vi.fn(() => ["1", "2", "3"]);
 vi.mock('./utils/fetchAPI', () => ({
     fetchCharacters: () => fetchCharacters,
