@@ -56,8 +56,7 @@ const Game = () => {
                         }}
                     ></img>
                     {selecting
-                    ?   <>
-                        <div
+                    ?   <div
                             className={styles["selection-box"]}
                             aria-label="selection-area"
                             onClick={clickedSelectionBox}
@@ -69,24 +68,28 @@ const Game = () => {
                                 width: `${boxSizePx[0]}px`,
                                 height: `${boxSizePx[1]}px`,
                             }}
-                        ></div>
-                        <ul
-                            className={styles["character-selection-box"]}
-                            aria-label="character-selection-box"
                         >
-                            {characters.map((character, i) => {
-                                return(
-                                    <li
-                                        className={styles["character-selection-option"]}
-                                        aria-label="character-selection-option"
-                                        key={i}
-                                    >
-                                        {character}
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                        </>
+                            <ul
+                                className={styles["character-selection-box"]}
+                                aria-label="character-selection-box"
+                                style={{
+                                    position: "absolute",
+                                    left: `${boxSizePx[0] + 10}px`
+                                }}
+                            >
+                                {characters.map((character, i) => {
+                                    return(
+                                        <li
+                                            className={styles["character-selection-option"]}
+                                            aria-label="character-selection-option"
+                                            key={i}
+                                        >
+                                            {character}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
                     :   null}
                     </>
                 :   <button

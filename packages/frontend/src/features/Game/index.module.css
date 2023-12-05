@@ -1,3 +1,15 @@
+/* No Select */
+.character-selection-option,
+.characters-remaining-title {
+    -webkit-touch-callout: none;    /* iOS Safari */
+    -webkit-user-select: none;      /* Safari */
+    -khtml-user-select: none;       /* Konqueror HTML */
+    -moz-user-select: none;         /* Old versions of Firefox */
+    -ms-user-select: none;          /* Internet Explorer/Edge */
+    user-select: none;              /* Non-prefixed version, currently
+                                       supported by Chrome, Edge, Opera and Firefox */
+}
+
 @keyframes fade-in {
     from {
         background-color: rgb(224, 224, 224);
@@ -71,6 +83,29 @@
 .selection-box {
     outline: 2px solid white;
     border-radius: 6px;
+}
+
+.character-selection-box {
+    list-style: none;
+
+    outline: 1px solid rgba(0, 0, 0, 1.0);
+    background-color: rgba(255, 255, 255, 1.0);
+    box-shadow: 0px 4px 5px -0px rgba(0, 0, 0, 0.3);
+
+    padding: 0rem;
+    margin: 0rem;
+}
+
+.character-selection-option {
+    color: rgba(0, 0, 0, 1.0);
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.32rem;
+
+    outline: 1px solid rgba(0, 0, 0, 0.3);
+
+    padding: 0.2rem;
 }
 
 .characters-remaining-container {
