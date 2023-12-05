@@ -108,4 +108,37 @@ describe("UI/DOM Testing...", () => {
             expect(selectionBox).not.toBeInTheDocument();
         });
     });
+    describe("The Characters Drop Down Box...", () => {
+        test("Should not exist on the page before the game has started", () => {
+            renderComponent();
+            const charDropDown = screen.queryByRole("list", { name: "characters-drop-down-box" });
+            expect(charDropDown).toBeNull();
+        });
+        test(`Should not exist on the page when the 'Start Game' button has just
+         been clicked`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            const charDropDown = screen.queryByRole("list", { name: "characters-drop-down-box" });
+            expect(charDropDown).toBeNull();
+        });
+        test(`Should be present when the game has started and the game image is
+         clicked`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charDropDown = screen.getByRole("list", { name: "characters-drop-down-box" });
+            expect(charDropDown).toBeInTheDocument();
+        });
+        test(`If it is present, it should be removed when the game image is
+         clicked`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charDropDown = screen.getByRole("list", { name: "characters-drop-down-box" });
+            await user.click(gameImage);
+            expect(charDropDown).not.toBeInTheDocument();
+        });
+    });
 });

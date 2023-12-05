@@ -56,7 +56,8 @@ const Game = () => {
                         }}
                     ></img>
                     {selecting
-                    ?   <div
+                    ?   <>
+                        <div
                             className={styles["selection-box"]}
                             aria-label="selection-area"
                             onClick={clickedSelectionBox}
@@ -69,6 +70,11 @@ const Game = () => {
                                 height: `${boxSizePx[1]}px`,
                             }}
                         ></div>
+                        <ul
+                            className={styles["characters-drop-down-box"]}
+                            aria-label="characters-drop-down-box"
+                        ></ul>
+                        </>
                     :   null}
                     </>
                 :   <button
