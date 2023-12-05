@@ -32,7 +32,7 @@ describe("UI/DOM Testing...", () => {
     });
     describe("The list of the characters remaining...", () => {
         test(`Should contain the same number of children as characters returned
-           from the server`, () => {
+         from the server`, () => {
             renderComponent();
             const characters = screen.getAllByRole("listitem", { name: "character" });
             expect(characters.length).toBe(3);
@@ -58,7 +58,7 @@ describe("UI/DOM Testing...", () => {
             expect(gameImage).toBeNull();
         });
         test(`Should be loaded in when the 'Start Game' button has just been
-           clicked`, async () => {
+         clicked`, async () => {
             const user = userEvent.setup();
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
@@ -72,14 +72,14 @@ describe("UI/DOM Testing...", () => {
             expect(selectionBox).toBeNull();
         });
         test(`Should not exist on the page when the 'Start Game' button has just
-           been clicked`, async () => {
+         been clicked`, async () => {
             const user = userEvent.setup();
             await startGame(user);
             const selectionBox = screen.queryByRole("generic", { name: "selection-area" });
             expect(selectionBox).toBeNull();
         });
         test(`Should be present when the game has started and the game image is
-           clicked`, async () => {
+         clicked`, async () => {
             const user = userEvent.setup();
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
@@ -88,7 +88,7 @@ describe("UI/DOM Testing...", () => {
             expect(selectionBox).toBeInTheDocument();
         });
         test(`If it is present, it should be removed when the game image is
-           clicked`, async () => {
+         clicked`, async () => {
             const user = userEvent.setup();
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });

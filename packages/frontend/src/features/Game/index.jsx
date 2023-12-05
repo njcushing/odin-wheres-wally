@@ -7,6 +7,7 @@ const Game = () => {
     const [gameStarted, setGameStarted] = useState(false);
     const [characters, setCharacters] = useState([]);
     const [gameImage, setGameImage] = useState("");
+    const [gameImageSize, setGameImageSize] = useState([800, 800]);
     const [selecting, setSelecting] = useState(false);
     const [clickPosition, setClickPosition] = useState([0, 0]);
 
@@ -31,7 +32,15 @@ const Game = () => {
     return (
         <div className={styles["wrapper"]}>
         <div className={styles["container"]}>
-            <div className={styles["image-container"]}>
+            <div
+                className={styles["image-container"]}
+                style={{
+                    position: "relative",
+                    
+                    width: `${gameImageSize[0]}px`,
+                    height: `${gameImageSize[1]}px`,
+                }}
+            >
                 {gameStarted
                 ?   <>
                     <img
@@ -39,6 +48,10 @@ const Game = () => {
                         src={gameImage}
                         alt="Image containing the characters to locate."
                         onClick={clickedImage}
+                        style={{
+                            width: `100%`,
+                            height: `100%`,
+                        }}
                     ></img>
                     {selecting
                     ?   <div
@@ -47,8 +60,8 @@ const Game = () => {
                             onClick={clickedSelectionBox}
                             style={{
                                 position: "absolute",
-                                left: `${Math.max(clickPosition[0] - (boxSizePx[0] / 2), 0)}px`,
-                                top: `${Math.max(clickPosition[1] - (boxSizePx[1] / 2), 0)}px`,
+                                left: `${Math.max(Math.min(clickPosition[0] - (boxSizePx[0] / 2), gameImageSize[0] - boxSizePx[0]), 0)}px`,
+                                top: `${Math.max(Math.min(clickPosition[1] - (boxSizePx[1] / 2), gameImageSize[1] - boxSizePx[1]), 0)}px`,
 
                                 width: `${boxSizePx[0]}px`,
                                 height: `${boxSizePx[1]}px`,
