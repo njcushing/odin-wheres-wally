@@ -7,6 +7,8 @@ import '@testing-library/jest-dom'
 import { forwardRef } from 'react'
 import Game from './index.jsx'
 
+import * as fetchAPI from "./utils/fetchAPI.js";
+
 const renderComponent = () => {
     render(<Game />);
 }
@@ -27,11 +29,25 @@ vi.mock('@/features/NavBar/components/NavigationButton', () => ({
     }
 }));
 
+const image = null;
+const imageSize = [800, 800];
 const characters = ["1", "2", "3"];
-const fetchCharacters = vi.fn(() => characters);
-vi.mock('./utils/fetchAPI', () => ({
-    fetchCharacters: () => fetchCharacters,
-}));
+const getGameInformation = vi.fn(() => {
+    return {
+        image: image,
+        imageSize: imageSize,
+        characters: characters,
+    }
+})
+const postCharacterSelection = vi.fn((characterName, clickPosition) => null);
+vi.mock('./utils/fetchAPI', async () => {
+    const actual = await vi.importActual("./utils/fetchAPI");
+    return {
+        ...actual,
+        getGameInformation: () => getGameInformation(),
+        postCharacterSelection: () => postCharacterSelection(),
+    }
+});
 
 describe("UI/DOM Testing...", () => {
     describe("The title of the characters remaining area...", () => {
@@ -150,5 +166,38 @@ describe("UI/DOM Testing...", () => {
             const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
             expect(charSelectionOptions.length).toBe(characters.length);
         });
+        /*
+            This test is currently broken - passing click event options with
+            userEvent (e.g. - clientX and clientY) is not working as of writing
+            this (user-event v14.5.1)
+
+        test(`Clicking one of the options should call the
+         'postCharacterSelection' API function, with the character name and
+         click position as the arguments`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            const imagePos = [100, 100];
+            Element.prototype.getBoundingClientRect = vi.fn(() => {
+                return { 
+                    x: 0,
+                    y: 0,
+                    bottom: 0,
+                    height: imageSize[1],
+                    left: imagePos[0],
+                    right: 0,
+                    top: imagePos[1],
+                    width: imageSize[0]
+                }
+            });
+            const a = await user.click(gameImage, {ctrlKey: true});
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            const postCharacterSelectionSpy = vi.spyOn(fetchAPI, "postCharacterSelection");
+            await user.click(charSelectionOptions[0]);
+            expect(postCharacterSelectionSpy).toHaveBeenCalledWith("1",
+                [Math.floor(imageSize[0] / 2) - imagePos[0], Math.floor(imageSize[1] / 2) - imagePos[1]]
+            );
+        });
+        */
     });
 });

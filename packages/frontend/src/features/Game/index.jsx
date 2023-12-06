@@ -7,17 +7,23 @@ import NavigationButton from "@/features/NavBar/components/NavigationButton";
 
 const Game = () => {
     const [gameStarted, setGameStarted] = useState(false);
-    const [characters, setCharacters] = useState([]);
-    const [gameImage, setGameImage] = useState("");
-    const [gameImageSize, setGameImageSize] = useState([800, 800]);
+    const [gameInfo, setGameInfo] = useState({
+        image: null,
+        imageSize: [800, 800],
+        characters: []
+    });
     const [selecting, setSelecting] = useState(false);
     const [clickPosition, setClickPosition] = useState([0, 0]);
 
     const boxSizePx = [72, 72];
 
     useEffect(() => {
-        const characters = fetchAPI.fetchCharacters();
-        setCharacters(characters);
+        const newInfo = fetchAPI.getGameInformation();
+        setGameInfo({
+            image: newInfo.image,
+            imageSize: newInfo.imageSize,
+            characters: newInfo.characters,
+        });
     }, []);
 
     const clickedImage = (e) => {
@@ -27,8 +33,8 @@ const Game = () => {
         setClickPosition(clickPos);
     }
 
-    const clickedSelectionBox = () => {
-        return;
+    const characterSelected = (characterName, clickPosition) => {
+        fetchAPI.postCharacterSelection(characterName, clickPosition);
     }
 
     return (
@@ -39,15 +45,15 @@ const Game = () => {
                 style={{
                     position: "relative",
 
-                    width: `${gameImageSize[0]}px`,
-                    height: `${gameImageSize[1]}px`,
+                    width: `${gameInfo.imageSize[0]}px`,
+                    height: `${gameInfo.imageSize[1]}px`,
                 }}
             >
                 {gameStarted
                 ?   <>
                     <img
                         className={styles["game-image"]}
-                        src={gameImage}
+                        src={gameInfo.image}
                         alt="Image containing the characters to locate."
                         onClick={clickedImage}
                         style={{
@@ -59,11 +65,10 @@ const Game = () => {
                     ?   <div
                             className={styles["selection-box"]}
                             aria-label="selection-area"
-                            onClick={clickedSelectionBox}
                             style={{
                                 position: "absolute",
-                                left: `${Math.max(Math.min(clickPosition[0] - (boxSizePx[0] / 2), gameImageSize[0] - boxSizePx[0]), 0)}px`,
-                                top: `${Math.max(Math.min(clickPosition[1] - (boxSizePx[1] / 2), gameImageSize[1] - boxSizePx[1]), 0)}px`,
+                                left: `${Math.max(Math.min(clickPosition[0] - (boxSizePx[0] / 2), gameInfo.imageSize[0] - boxSizePx[0]), 0)}px`,
+                                top: `${Math.max(Math.min(clickPosition[1] - (boxSizePx[1] / 2), gameInfo.imageSize[1] - boxSizePx[1]), 0)}px`,
 
                                 width: `${boxSizePx[0]}px`,
                                 height: `${boxSizePx[1]}px`,
@@ -77,12 +82,21 @@ const Game = () => {
                                     left: `${boxSizePx[0] + 10}px`
                                 }}
                             >
-                                {characters.map((character, i) => {
+                                {gameInfo.characters.map((character, i) => {
                                     return(
                                         <li
                                             className={styles["character-selection-option"]}
                                             aria-label="character-selection-option"
+                                            onClick={(e) => {
+                                                e.target.blur();
+                                                e.preventDefault();
+                                                characterSelected(gameInfo.characters[i], clickPosition);
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.blur();
+                                            }}
                                             key={i}
+                                            tabIndex={0}
                                         >
                                             {character}
                                         </li>
@@ -111,7 +125,7 @@ const Game = () => {
                     aria-label="characters-remaining"
                 >Characters Remaining</h3>
                 <ul className={styles["characters-remaining-list"]}>
-                    {characters.map((character, i) => {
+                    {gameInfo.characters.map((character, i) => {
                         return (
                             <li
                                 className={styles["character"]}
