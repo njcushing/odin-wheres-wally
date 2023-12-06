@@ -108,6 +108,14 @@
     padding: 0.2rem;
 }
 
+.character-selection-option:hover {
+    background-color: rgb(211, 211, 211, 1.0);
+}
+
+.character-selection-option:focus {
+    background-color: rgb(190, 190, 190, 1.0);
+}
+
 .characters-remaining-container {
     grid-area: 1 / 2 / 2 / -1;
     justify-self: center;
