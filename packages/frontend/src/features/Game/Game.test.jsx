@@ -199,5 +199,16 @@ describe("UI/DOM Testing...", () => {
             );
         });
         */
+        test(`Should be closed after an option is selected, regardless of the
+         outcome of the click`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charSelectionBox = screen.getByRole("list", { name: "character-selection-box" });
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            await user.click(charSelectionOptions[0]);
+            expect(charSelectionBox).not.toBeInTheDocument();
+        });
     });
 });

@@ -35,6 +35,7 @@ const Game = () => {
 
     const characterSelected = (characterName, clickPosition) => {
         fetchAPI.postCharacterSelection(characterName, clickPosition);
+        setSelecting(false);
     }
 
     return (
