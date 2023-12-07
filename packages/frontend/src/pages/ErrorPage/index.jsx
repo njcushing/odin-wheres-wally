@@ -3,7 +3,7 @@ import styles from "./index.module.css";
 
 import NavigationButton from "@/features/NavBar/components/NavigationButton";
 
-const Error = () => {
+const ErrorPage = () => {
     return (
         <div className={styles["wrapper"]}>
         <div className={styles["container"]}>
@@ -22,4 +22,4 @@ const Error = () => {
     )
 }
 
-export default Error;
+export default ErrorPage;
