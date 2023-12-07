@@ -29,4 +29,11 @@ describe("UI/DOM Testing...", () => {
             expect(highScoresTitle).toBeInTheDocument();
         });
     });
+    describe("The high scores list...", () => {
+        test("Should exist on the page", () => {
+            renderComponent();
+            const highScoresList = screen.getByRole("list", { name: "high-scores-list" });
+            expect(highScoresList).toBeInTheDocument();
+        });
+    })
 });
