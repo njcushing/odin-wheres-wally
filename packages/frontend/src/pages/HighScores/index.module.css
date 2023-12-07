@@ -31,6 +31,10 @@
     width: auto;
     height: 100%;
     padding: 0.6rem 0.4rem;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
 }
 
 .high-scores-title {
@@ -74,7 +78,7 @@
 
     opacity: 0%;
     transform: translateY(0.5rem);
-    animation: 0.3s ease-in-out 1.6s 1 normal forwards fade-in;
+    animation: 0.3s ease-in-out 2.0s 1 normal forwards fade-in;
 }
 
 .high-score-silver {
@@ -87,7 +91,7 @@
 
     opacity: 0%;
     transform: translateY(0.5rem);
-    animation: 0.3s ease-in-out 1.0s 1 normal forwards fade-in;
+    animation: 0.3s ease-in-out 1.4s 1 normal forwards fade-in;
 }
 
 .high-score-bronze {
@@ -100,7 +104,7 @@
 
     opacity: 0%;
     transform: translateY(0.5rem);
-    animation: 0.3s ease-in-out 0.5s 1 normal forwards fade-in;
+    animation: 0.3s ease-in-out 0.9s 1 normal forwards fade-in;
 }
 
 .high-score {
@@ -113,7 +117,7 @@
 
     opacity: 0%;
     transform: translateY(0.5rem);
-    animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
+    animation: 0.3s ease-in-out 0.55s 1 normal forwards fade-in;
 }
 
 .high-score-information {

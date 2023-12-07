@@ -12,6 +12,17 @@
 
 @keyframes fade-in {
     from {
+        opacity: 0%;
+        transform: translateY(0.5rem);
+    }
+    to {
+        opacity: 100%;
+        transform: translateY(0rem);
+    }
+}
+
+@keyframes fade-in-background {
+    from {
         background-color: rgb(224, 224, 224);
     }
     to {
@@ -35,6 +46,10 @@
     grid-template-rows: repeat(2, auto);
     justify-items: center;
     gap: 0.8rem;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
 }
 
 .image-container {
@@ -67,7 +82,7 @@
 }
 .start-game-button:hover,
 .submit-to-high-scores-button:hover {
-    animation: 0.25s ease-in-out 0.0s 1 normal forwards fade-in;
+    animation: 0.25s ease-in-out 0.0s 1 normal forwards fade-in-background;
 }
 
 @media (hover: hover) {
@@ -125,6 +140,10 @@
     flex-direction: column;
     justify-content: center;
     gap: 0.8rem;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
 }
 
 .congratulations-message,
@@ -163,6 +182,10 @@
 
     padding: 1.2rem 0.4rem;
     margin: 0rem;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 0.3s 1 normal forwards fade-in;
 }
 
 .characters-remaining-list {
@@ -175,6 +198,16 @@
 
     padding: 0.4rem;
     margin: 0rem;
+}
+
+.character-remaining {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.2rem;
+    font-family: Gabarito;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
 }
 
 .navigation-button {
