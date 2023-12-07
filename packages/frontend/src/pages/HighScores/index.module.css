@@ -1,0 +1,98 @@
+.wrapper {
+    container-type: inline-size;
+
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+}
+
+.container {
+    align-self: center;
+
+    display: grid;
+    grid-template-rows: repeat(2, auto) 1fr;
+    align-items: center;
+    gap: 2rem;
+
+    border-radius: 8px;
+    background-color: rgb(44, 44, 44);
+    
+    width: auto;
+    height: 100%;
+    padding: 0.6rem 0.4rem;
+}
+
+.high-scores-title {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.9rem;
+    font-family: Gabarito;
+    text-align: center;
+
+    padding: 0.6rem;
+    margin: 0rem;
+}
+
+.high-scores-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+
+    list-style: none;
+
+    padding: 0.4rem;
+    margin: 0rem;
+}
+
+.high-score-gold,
+.high-score-silver,
+.high-score-bronze,
+.high-score {
+    display: flex;
+}
+
+.high-score-gold {
+    gap: 1.2rem;
+}
+
+.high-score-gold > h2 {
+    color: rgba(238, 202, 0, 0.92);
+    font-size: 2.4rem;
+}
+
+.high-score-silver {
+    gap: 1.0rem;
+}
+
+.high-score-silver > h2 {
+    color: rgba(192, 192, 192, 0.92);
+    font-size: 2.0rem;
+}
+
+.high-score-bronze {
+    gap: 0.8rem;
+}
+
+.high-score-bronze > h2 {
+    color: rgba(205, 127, 50, 0.92);
+    font-size: 1.6rem;
+}
+
+.high-score {
+    gap: 0.6rem;
+}
+
+.high-score > h2 {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.2rem;
+}
+
+.high-score-information {
+    padding: 0rem;
+    margin: 0rem;
+}
+
+.navigation-button {
+    display: flex;
+    justify-content: center;
+}
