@@ -1,3 +1,14 @@
+@keyframes fade-in {
+    from {
+        opacity: 0%;
+        transform: translateY(0.5rem);
+    }
+    to {
+        opacity: 100%;
+        transform: translateY(0rem);
+    }
+}
+
 .wrapper {
     container-type: inline-size;
 
@@ -40,7 +51,7 @@
 
     list-style: none;
 
-    padding: 0.4rem;
+    padding: 0rem;
     margin: 0rem;
 }
 
@@ -49,6 +60,8 @@
 .high-score-bronze,
 .high-score {
     display: flex;
+
+    font-family: Gabarito;
 }
 
 .high-score-gold {
@@ -58,6 +71,10 @@
 .high-score-gold > h2 {
     color: rgba(238, 202, 0, 0.92);
     font-size: 2.4rem;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 1.6s 1 normal forwards fade-in;
 }
 
 .high-score-silver {
@@ -67,6 +84,10 @@
 .high-score-silver > h2 {
     color: rgba(192, 192, 192, 0.92);
     font-size: 2.0rem;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 1.0s 1 normal forwards fade-in;
 }
 
 .high-score-bronze {
@@ -76,6 +97,10 @@
 .high-score-bronze > h2 {
     color: rgba(205, 127, 50, 0.92);
     font-size: 1.6rem;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 0.5s 1 normal forwards fade-in;
 }
 
 .high-score {
@@ -85,6 +110,10 @@
 .high-score > h2 {
     color: rgba(255, 255, 255, 0.92);
     font-size: 1.2rem;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
 }
 
 .high-score-information {
