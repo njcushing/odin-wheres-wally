@@ -6,7 +6,7 @@ import * as fetchAPI from "./utils/fetchAPI.js";
 import NavigationButton from "@/features/NavBar/components/NavigationButton";
 
 const Game = () => {
-    const [gameStarted, setGameStarted] = useState(false);
+    const [gameState, setGameState] = useState("waiting");
     const [gameInfo, setGameInfo] = useState({
         image: null,
         imageSize: [800, 800],
@@ -17,14 +17,15 @@ const Game = () => {
 
     const boxSizePx = [72, 72];
 
-    useEffect(() => {
+    const startGame = () => {
         const newInfo = fetchAPI.getGameInformation();
         setGameInfo({
             image: newInfo.image,
             imageSize: newInfo.imageSize,
             characters: newInfo.characters,
         });
-    }, []);
+        setGameState("started");
+    }
 
     const clickedImage = (e) => {
         const rect = e.target.getBoundingClientRect();
@@ -36,12 +37,30 @@ const Game = () => {
     const characterSelected = (characterName, clickPosition) => {
         const selectionResult = fetchAPI.postCharacterSelection(characterName, clickPosition);
         if (selectionResult) {
+            const charactersNew = gameInfo.characters.filter((character) => character != characterName)
             setGameInfo({
                 ...gameInfo,
-                characters: gameInfo.characters.filter((character) => character != characterName),
-            })
+                characters: charactersNew,
+            });
+            if (charactersNew.length === 0) setGameState("ended");
         }
         setSelecting(false);
+    }
+
+    const startGameButton = (text) => {
+        return (
+            <button
+                className={styles["start-game-button"]}
+                onClick={(e) => {
+                    e.target.blur();
+                    e.preventDefault();
+                    startGame();
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.blur();
+                }}
+            >{text}</button>
+        );
     }
 
     return (
@@ -56,7 +75,10 @@ const Game = () => {
                     height: `${gameInfo.imageSize[1]}px`,
                 }}
             >
-                {gameStarted
+                {gameState === "waiting"
+                ?   startGameButton("Start Game")
+                :   null}
+                {gameState === "started"
                 ?   <>
                     <img
                         className={styles["game-image"]}
@@ -113,18 +135,16 @@ const Game = () => {
                         </div>
                     :   null}
                     </>
-                :   <button
-                        className={styles["start-game-button"]}
-                        onClick={(e) => {
-                            e.target.blur();
-                            e.preventDefault();
-                            setGameStarted(true);
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.blur();
-                        }}
-                    >Start Game</button>
-                }
+                :   null}
+                {gameState === "ended"
+                ?   <>
+                    <h1
+                        className={styles["congratulations-message"]}
+                        aria-label="congratulations-message"
+                    >Congratulations!</h1>
+                    {startGameButton("Play Again")}
+                    </>
+                :   null}
             </div>
             <div className={styles["characters-remaining-container"]}>
                 <h3

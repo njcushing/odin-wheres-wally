@@ -59,8 +59,9 @@ describe("UI/DOM Testing...", () => {
     });
     describe("The list of the characters remaining...", () => {
         test(`Should contain the same number of children as characters returned
-         from the server`, () => {
-            renderComponent();
+         from the server`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
             const characters = screen.getAllByRole("listitem", { name: "character-remaining" });
             expect(characters.length).toBe(3);
         });
@@ -233,6 +234,25 @@ describe("UI/DOM Testing...", () => {
             await user.click(gameImage);
             const charSelectionOptionsNew = screen.getAllByRole("listitem", { name: "character-selection-option" });
             expect(charSelectionOptionsNew[0].textContent).not.toBe("1");
+        });
+    });
+    describe("The 'congratulations' message...", () => {
+        test("Should be displayed when the last character is selected", async () => {
+            const user = userEvent.setup();
+            getGameInformation.mockReturnValueOnce({
+                image: image,
+                imageSize: imageSize,
+                characters: ["1"],
+            });
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            let congratulationsMessage = screen.queryByRole("heading", { name: "congratulations-message" });
+            expect(congratulationsMessage).toBeNull();
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            await user.click(charSelectionOptions[0]);
+            congratulationsMessage = screen.getByRole("heading", { name: "congratulations-message" });
+            expect(congratulationsMessage).toBeInTheDocument();
         });
     });
 });
