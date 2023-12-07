@@ -48,7 +48,8 @@
     background-color: rgb(44, 44, 44);
 }
 
-.start-game-button {
+.start-game-button,
+.submit-to-high-scores-button {
     place-self: center;
 
     color: rgba(0, 0, 0, 0.87);
@@ -64,18 +65,21 @@
 
     transition: transform 0.25s ease-in-out 0s;
 }
-.start-game-button:hover {
+.start-game-button:hover,
+.submit-to-high-scores-button:hover {
     animation: 0.25s ease-in-out 0.0s 1 normal forwards fade-in;
 }
 
 @media (hover: hover) {
-    .start-game-button:hover {
+    .start-game-button:hover,
+    .submit-to-high-scores-button:hover {
         transform: scale(107%);
         outline: 1px solid white;
     }
 }
 
-.start-game-button:focus {
+.start-game-button:focus,
+.submit-to-high-scores-button:focus {
     transform: scale(107%);
     outline: 2px solid white;
 }
