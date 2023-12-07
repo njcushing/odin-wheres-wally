@@ -5,10 +5,10 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import { forwardRef } from 'react'
-import Error from './index.jsx'
+import ErrorPage from './index.jsx'
 
 const renderComponent = () => {
-    render(<Error />);
+    render(<ErrorPage />);
 }
 
 vi.mock('@/features/NavBar/components/NavigationButton', () => ({ 
