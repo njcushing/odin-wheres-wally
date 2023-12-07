@@ -69,6 +69,22 @@ const Game = () => {
         );
     }
 
+    const submitToHighScoresButton = () => {
+        return (
+            <button
+                className={styles["submit-to-high-scores-button"]}
+                onClick={(e) => {
+                    e.target.blur();
+                    e.preventDefault();
+                    fetchAPI.postHighScoreSubmission();
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.blur();
+                }}
+            >Submit to High-Scores</button>
+        );
+    }
+
     return (
         <div className={styles["wrapper"]}>
         <div className={styles["container"]}>
@@ -155,6 +171,7 @@ const Game = () => {
                         >Your final time was: {gameDuration}</h3>
                     :   null}
                     {startGameButton("Play Again")}
+                    {submitToHighScoresButton()}
                     </div>
                 :   null}
             </div>

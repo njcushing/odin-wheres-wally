@@ -274,4 +274,40 @@ describe("UI/DOM Testing...", () => {
             expect(gameDuration).toBeInTheDocument();
         });
     });
+    describe("The 'Submit to High-Scores button", () => {
+        test("Should be displayed when the game is won", async () => {
+            const user = userEvent.setup();
+            getGameInformation.mockReturnValueOnce({
+                image: image,
+                imageSize: imageSize,
+                characters: ["1"],
+            });
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            let submitToHighScoresButton = screen.queryByRole("button", { name: "submit-to-high-scores-button" });
+            expect(submitToHighScoresButton).toBeNull();
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            await user.click(charSelectionOptions[0]);
+            submitToHighScoresButton = screen.getByRole("button", { name: /Submit to High-Scores/i });
+            expect(submitToHighScoresButton).toBeInTheDocument();
+        });
+        test("Should call the postHighScoreSubmission function when clicked", async () => {
+            const user = userEvent.setup();
+            getGameInformation.mockReturnValueOnce({
+                image: image,
+                imageSize: imageSize,
+                characters: ["1"],
+            });
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            await user.click(charSelectionOptions[0]);
+            const submitToHighScoresButton = screen.getByRole("button", { name: /Submit to High-Scores/i });
+            const postHighScoreSubmissionSpy = vi.spyOn(fetchAPI, "postHighScoreSubmission");
+            await user.click(submitToHighScoresButton);
+            expect(postHighScoreSubmissionSpy).toHaveBeenCalledTimes(1);
+        });
+    });
 });
