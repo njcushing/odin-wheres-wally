@@ -76,4 +76,11 @@ describe("UI/DOM Testing...", () => {
             expect(highScores.length).toBe(5);
         });
     });
+    describe("The high scores...", () => {
+        test("Should each contain information about the score", () => {
+            renderComponent();
+            const highScores = screen.getAllByRole("heading", { name: "high-score-information" });
+            expect(highScores.length).toBe(5);
+        });
+    });
 });
