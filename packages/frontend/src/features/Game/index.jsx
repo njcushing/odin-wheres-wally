@@ -34,7 +34,13 @@ const Game = () => {
     }
 
     const characterSelected = (characterName, clickPosition) => {
-        fetchAPI.postCharacterSelection(characterName, clickPosition);
+        const selectionResult = fetchAPI.postCharacterSelection(characterName, clickPosition);
+        if (selectionResult) {
+            setGameInfo({
+                ...gameInfo,
+                characters: gameInfo.characters.filter((character) => character != characterName),
+            })
+        }
         setSelecting(false);
     }
 
@@ -129,10 +135,10 @@ const Game = () => {
                     {gameInfo.characters.map((character, i) => {
                         return (
                             <li
-                                className={styles["character"]}
-                                aria-label="character"
+                                className={styles["character-remaining"]}
+                                aria-label="character-remaining"
                                 key={i}
-                            >{i}</li>
+                            >{character}</li>
                         )
                     })}
                 </ul>

@@ -39,7 +39,7 @@ const getGameInformation = vi.fn(() => {
         characters: characters,
     }
 })
-const postCharacterSelection = vi.fn((characterName, clickPosition) => null);
+const postCharacterSelection = vi.fn((characterName, clickPosition) => true);
 vi.mock('./utils/fetchAPI', async () => {
     const actual = await vi.importActual("./utils/fetchAPI");
     return {
@@ -61,8 +61,19 @@ describe("UI/DOM Testing...", () => {
         test(`Should contain the same number of children as characters returned
          from the server`, () => {
             renderComponent();
-            const characters = screen.getAllByRole("listitem", { name: "character" });
+            const characters = screen.getAllByRole("listitem", { name: "character-remaining" });
             expect(characters.length).toBe(3);
+        });
+        test(`Should NOT contain any characters that have been successfully
+         selected`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            expect(screen.queryByText("1")).not.toBeNull();
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            await user.click(charSelectionOptions[0]);
+            expect(screen.queryByText("1")).toBeNull();
         });
     });
     describe("The 'Start Game' button...", () => {
@@ -209,6 +220,19 @@ describe("UI/DOM Testing...", () => {
             const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
             await user.click(charSelectionOptions[0]);
             expect(charSelectionBox).not.toBeInTheDocument();
+        });
+        test(`Should NOT contain any characters that have been successfully
+        selected`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            expect(charSelectionOptions[0].textContent).toBe("1");
+            await user.click(charSelectionOptions[0]);
+            await user.click(gameImage);
+            const charSelectionOptionsNew = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            expect(charSelectionOptionsNew[0].textContent).not.toBe("1");
         });
     });
 });

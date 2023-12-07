@@ -7,5 +7,5 @@ export const getGameInformation = () => {
 };
 
 export const postCharacterSelection = (character, clickPosition) => {
-    return;
+    return true;
 };
