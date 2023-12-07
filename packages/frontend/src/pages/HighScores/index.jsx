@@ -25,9 +25,13 @@ const HighScores = () => {
                 aria-label="high-scores-list"
             >
                 {highScoreList.map((score, i) => {
+                    let position = "";
+                    if (i === 0) position = "-gold";
+                    if (i === 1) position = "-silver";
+                    if (i === 2) position = "-bronze";
                     return (
                         <li
-                            className={styles[`high-score`]}
+                            className={styles[`high-score${position}`]}
                             aria-label="high-score"
                             key={i}
                         >

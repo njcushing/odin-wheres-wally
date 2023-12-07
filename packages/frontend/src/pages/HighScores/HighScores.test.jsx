@@ -75,5 +75,5 @@ describe("UI/DOM Testing...", () => {
             const highScores = screen.getAllByRole("listitem", { name: "high-score" });
             expect(highScores.length).toBe(5);
         });
-    })
+    });
 });
