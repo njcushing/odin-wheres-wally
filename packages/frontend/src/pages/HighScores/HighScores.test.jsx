@@ -21,6 +21,40 @@ vi.mock('@/features/NavBar/components/NavigationButton', () => ({
     }
 }));
 
+vi.mock('./utils/getHighScores', async () => {
+    return {
+        default: () => vi.fn(() => {
+            return [
+                {
+                    firstName: "Davey",
+                    lastName: "Jones",
+                    time: 213,
+                },
+                {
+                    firstName: "Elizabeth",
+                    lastName: "Swann",
+                    time: 297,
+                },
+                {
+                    firstName: "Jack",
+                    lastName: "Sparrow",
+                    time: 345,
+                },
+                {
+                    firstName: "John",
+                    lastName: "Smith",
+                    time: 380,
+                },
+                {
+                    firstName: "William",
+                    lastName: "Turner",
+                    time: 645,
+                },
+            ];
+        }),
+    }
+});
+
 describe("UI/DOM Testing...", () => {
     describe("The high scores title element...", () => {
         test("Should exist on the page", () => {
@@ -34,6 +68,12 @@ describe("UI/DOM Testing...", () => {
             renderComponent();
             const highScoresList = screen.getByRole("list", { name: "high-scores-list" });
             expect(highScoresList).toBeInTheDocument();
+        });
+        test(`Should have as many list items as there are high-scores returned
+         by the getHighScores API function`, () => {
+            renderComponent();
+            const highScores = screen.getAllByRole("listitem", { name: "high-score" });
+            expect(highScores.length).toBe(5);
         });
     })
 });

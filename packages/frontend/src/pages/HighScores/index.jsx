@@ -24,7 +24,17 @@ const HighScores = () => {
                 className={styles["high-scores-list"]}
                 aria-label="high-scores-list"
             >
-                
+                {highScoreList.map((score, i) => {
+                    return (
+                        <li
+                            className={styles[`high-score`]}
+                            aria-label="high-score"
+                            key={i}
+                        >
+                            test
+                        </li>
+                    );
+                })}
             </ul>
             <div className={styles["navigation-button"]}>
                 <NavigationButton
