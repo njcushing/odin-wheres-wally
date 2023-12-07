@@ -23,3 +23,7 @@ export const getGameDuration = () => {
     seconds = seconds < 10 ? `0${seconds}` : seconds;
     return `${hours}:${minutes}:${seconds}`;
 };
+
+export const postHighScoreSubmission = () => {
+    return;
+};
