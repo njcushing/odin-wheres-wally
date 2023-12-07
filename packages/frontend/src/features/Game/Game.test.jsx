@@ -255,4 +255,23 @@ describe("UI/DOM Testing...", () => {
             expect(congratulationsMessage).toBeInTheDocument();
         });
     });
+    describe("The 'game duration'...", () => {
+        test("Should be displayed when the game is won", async () => {
+            const user = userEvent.setup();
+            getGameInformation.mockReturnValueOnce({
+                image: image,
+                imageSize: imageSize,
+                characters: ["1"],
+            });
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            let gameDuration = screen.queryByRole("heading", { name: "game-duration" });
+            expect(gameDuration).toBeNull();
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            await user.click(charSelectionOptions[0]);
+            gameDuration = screen.getByRole("heading", { name: "game-duration" });
+            expect(gameDuration).toBeInTheDocument();
+        });
+    });
 });

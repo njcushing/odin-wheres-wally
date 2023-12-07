@@ -12,6 +12,7 @@ const Game = () => {
         imageSize: [800, 800],
         characters: []
     });
+    const [gameDuration, setGameDuration] = useState(null);
     const [selecting, setSelecting] = useState(false);
     const [clickPosition, setClickPosition] = useState([0, 0]);
 
@@ -25,6 +26,7 @@ const Game = () => {
             characters: newInfo.characters,
         });
         setGameState("started");
+        setGameDuration(null);
     }
 
     const clickedImage = (e) => {
@@ -42,7 +44,11 @@ const Game = () => {
                 ...gameInfo,
                 characters: charactersNew,
             });
-            if (charactersNew.length === 0) setGameState("ended");
+            if (charactersNew.length === 0) {
+                const duration = fetchAPI.getGameDuration();
+                setGameState("ended");
+                setGameDuration(duration);
+            }
         }
         setSelecting(false);
     }
@@ -137,13 +143,19 @@ const Game = () => {
                     </>
                 :   null}
                 {gameState === "ended"
-                ?   <>
+                ?   <div className={styles["game-ended-display"]}>
                     <h1
                         className={styles["congratulations-message"]}
                         aria-label="congratulations-message"
                     >Congratulations!</h1>
+                    {gameDuration
+                    ?   <h3
+                            className={styles["game-duration"]}
+                            aria-label="game-duration"
+                        >Your final time was: {gameDuration}</h3>
+                    :   null}
                     {startGameButton("Play Again")}
-                    </>
+                    </div>
                 :   null}
             </div>
             <div className={styles["characters-remaining-container"]}>
