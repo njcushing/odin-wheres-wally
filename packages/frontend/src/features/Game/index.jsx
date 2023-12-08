@@ -19,14 +19,17 @@ const Game = () => {
     const boxSizePx = [72, 72];
 
     const startGame = () => {
-        const newInfo = fetchAPI.getGameInformation();
-        setGameInfo({
-            image: newInfo.image,
-            imageSize: newInfo.imageSize,
-            characters: newInfo.characters,
-        });
-        setGameState("started");
-        setGameDuration(null);
+        const getGameInfo = async () => {
+            const newInfo = await fetchAPI.getGameInformation();
+            setGameInfo({
+                image: newInfo.image,
+                imageSize: newInfo.imageSize,
+                characters: newInfo.characters,
+            });
+            setGameState("started");
+            setGameDuration(null);
+        }
+        getGameInfo();
     }
 
     const clickedImage = (e) => {
@@ -39,7 +42,7 @@ const Game = () => {
     const characterSelected = (characterName, clickPosition) => {
         const selectionResult = fetchAPI.postCharacterSelection(characterName, clickPosition);
         if (selectionResult) {
-            const charactersNew = gameInfo.characters.filter((character) => character != characterName)
+            const charactersNew = gameInfo.characters.filter((character) => character.name != characterName)
             setGameInfo({
                 ...gameInfo,
                 characters: charactersNew,
@@ -141,7 +144,7 @@ const Game = () => {
                                             onClick={(e) => {
                                                 e.target.blur();
                                                 e.preventDefault();
-                                                characterSelected(gameInfo.characters[i], clickPosition);
+                                                characterSelected(character.name, clickPosition);
                                             }}
                                             onMouseLeave={(e) => {
                                                 e.currentTarget.blur();
@@ -149,7 +152,7 @@ const Game = () => {
                                             key={i}
                                             tabIndex={0}
                                         >
-                                            {character}
+                                            {character.name}
                                         </li>
                                     );
                                 })}
@@ -187,7 +190,7 @@ const Game = () => {
                                 className={styles["character-remaining"]}
                                 aria-label="character-remaining"
                                 key={i}
-                            >{character}</li>
+                            >{character.name}</li>
                         )
                     })}
                 </ul>

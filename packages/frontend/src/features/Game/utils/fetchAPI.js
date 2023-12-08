@@ -1,11 +1,33 @@
 import convertTimeSecondsToHours from "@/utils/convertTimeSecondsToHours.js";
 
-export const getGameInformation = () => {
-    return {
-        image: null,
-        imageSize: [800, 800],
-        characters: ["char_1", "char_2", "char_3", "char_4", "char_5"],
-    };
+export const getGameInformation = async () => {
+    const gameInfo = await fetch(
+        `${import.meta.env.VITE_SERVER_DOMAIN}/game/6572fc2d12becab50ff4f90f`,
+        {
+            method: "GET",
+            mode: "cors",
+        }
+    )
+        .then((response) => {
+            if (response.status >= 400) {
+                throw new Error(`Request error: status ${response.status}`);
+            } else {
+                return response.json();
+            }
+        })
+        .then((response) => response.data)
+        .catch((error) => {
+            throw new Error(error);
+        });
+    if (gameInfo) {
+        return {
+            image: gameInfo.imageUrl,
+            imageSize: [gameInfo.imageWidth, gameInfo.imageHeight],
+            characters: gameInfo.characters,
+        };
+    } else {
+        return null;
+    }
 };
 
 export const postCharacterSelection = (character, clickPosition) => {
