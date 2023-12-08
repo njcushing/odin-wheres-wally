@@ -31,7 +31,20 @@ vi.mock('@/features/NavBar/components/NavigationButton', () => ({
 
 const image = null;
 const imageSize = [800, 800];
-const characters = ["1", "2", "3"];
+const characters = [
+    {
+        name: "1",
+        imageUrl: null
+    },
+    {
+        name: "2",
+        imageUrl: null
+    },
+    {
+        name: "3",
+        imageUrl: null
+    }
+];
 const getGameInformation = vi.fn(() => {
     return {
         image: image,
