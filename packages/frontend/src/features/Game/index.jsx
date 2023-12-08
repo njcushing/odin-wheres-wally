@@ -190,7 +190,14 @@ const Game = () => {
                                 className={styles["character-remaining"]}
                                 aria-label="character-remaining"
                                 key={i}
-                            >{character.name}</li>
+                            >
+                                <img
+                                    className={styles["character-image"]}
+                                    aria-label="character-image"
+                                    src={character.imageUrl}
+                                    alt={character.name}
+                                ></img>   
+                            {character.name}</li>
                         )
                     })}
                 </ul>

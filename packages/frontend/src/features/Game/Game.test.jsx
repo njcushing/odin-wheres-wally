@@ -89,6 +89,12 @@ describe("UI/DOM Testing...", () => {
             await user.click(charSelectionOptions[0]);
             expect(screen.queryByText("1")).toBeNull();
         });
+        test(`Should each have an <img> element displaying the character`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            const characterImages = screen.getAllByRole("img", { name: "character-image" });
+            expect(characterImages.length).toBe(3);
+        });
     });
     describe("The 'Start Game' button...", () => {
         test("Should exist on the page by default", () => {
