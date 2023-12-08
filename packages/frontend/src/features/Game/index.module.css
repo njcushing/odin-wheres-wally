@@ -63,6 +63,10 @@
     background-color: rgb(44, 44, 44);
 }
 
+.game-image {
+    border-radius: 8px;
+}
+
 .start-game-button,
 .submit-to-high-scores-button {
     place-self: center;
@@ -192,7 +196,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.6rem;
+    gap: 1.2rem;
 
     list-style: none;
 
@@ -201,6 +205,11 @@
 }
 
 .character-remaining {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+
     color: rgba(255, 255, 255, 0.92);
     font-size: 1.2rem;
     font-family: Gabarito;
