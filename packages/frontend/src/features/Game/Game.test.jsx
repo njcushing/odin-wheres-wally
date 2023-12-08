@@ -255,6 +255,20 @@ describe("UI/DOM Testing...", () => {
             expect(charSelectionOptionsNew[0].textContent).not.toBe("1");
         });
     });
+    describe("A 'successful click area'...", () => {
+        test("Should be displayed for each character found", async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            let successfulClickAreas = screen.queryAllByRole("generic", { name: "successful-click-area" });
+            expect(successfulClickAreas.length).toBe(0);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            await user.click(charSelectionOptions[0]);
+            successfulClickAreas = screen.getAllByRole("generic", { name: "successful-click-area" });
+            expect(successfulClickAreas.length).toBe(1);
+        })
+    });
     describe("The 'congratulations' message...", () => {
         test("Should be displayed when the last character is selected", async () => {
             const user = userEvent.setup();

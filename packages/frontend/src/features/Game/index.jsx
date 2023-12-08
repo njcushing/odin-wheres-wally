@@ -15,6 +15,7 @@ const Game = () => {
     const [gameDuration, setGameDuration] = useState(null);
     const [selecting, setSelecting] = useState(false);
     const [clickPosition, setClickPosition] = useState([0, 0]);
+    const [successfulClicks, setSuccessfulClicks] = useState([]);
 
     const boxSizePx = [72, 72];
 
@@ -28,6 +29,7 @@ const Game = () => {
             });
             setGameState("started");
             setGameDuration(null);
+            setSuccessfulClicks([]);
         }
         getGameInfo();
     }
@@ -47,6 +49,10 @@ const Game = () => {
                 ...gameInfo,
                 characters: charactersNew,
             });
+            setSuccessfulClicks([
+                ...successfulClicks,
+                clickPosition
+            ]);
             if (charactersNew.length === 0) {
                 const duration = fetchAPI.getGameDuration();
                 setGameState("ended");
@@ -159,6 +165,23 @@ const Game = () => {
                             </ul>
                         </div>
                     :   null}
+                    {successfulClicks.map((clickPosition, i) => {
+                        return (
+                            <div
+                                className={styles["successful-click-area"]}
+                                key={i}
+                                aria-label="successful-click-area"
+                                style={{
+                                    position: "absolute",
+                                    left: `${Math.max(Math.min(clickPosition[0] - (boxSizePx[0] / 2), gameInfo.imageSize[0] - boxSizePx[0]), 0)}px`,
+                                    top: `${Math.max(Math.min(clickPosition[1] - (boxSizePx[1] / 2), gameInfo.imageSize[1] - boxSizePx[1]), 0)}px`,
+    
+                                    width: `${boxSizePx[0]}px`,
+                                    height: `${boxSizePx[1]}px`,
+                                }}
+                            ></div>
+                        );
+                    })}
                     </>
                 :   null}
                 {gameState === "ended"
