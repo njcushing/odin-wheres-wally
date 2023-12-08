@@ -1,8 +1,10 @@
 import express from "express";
 const router = express.Router();
 
+import game from "./game.js";
+
 router.get("/", (req, res) => {
-    res.send("Request successful");
+    res.send("");
 });
 
-export { router as index };
+export { router as index, game };
