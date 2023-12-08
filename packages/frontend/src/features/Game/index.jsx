@@ -35,10 +35,12 @@ const Game = () => {
     }
 
     const clickedImage = (e) => {
-        const rect = e.target.getBoundingClientRect();
-        const clickPos = [e.clientX - rect.left, e.clientY - rect.top];
-        setSelecting(!selecting);
-        setClickPosition(clickPos);
+        if (gameState === "started") {
+            const rect = e.target.getBoundingClientRect();
+            const clickPos = [e.clientX - rect.left, e.clientY - rect.top];
+            setSelecting(!selecting);
+            setClickPosition(clickPos);
+        }
     }
 
     const characterSelected = (characterName, clickPosition) => {
@@ -109,7 +111,7 @@ const Game = () => {
                 {gameState === "waiting"
                 ?   startGameButton("Start Game")
                 :   null}
-                {gameState === "started"
+                {gameState === "started" || gameState === "ended"
                 ?   <>
                     <img
                         className={styles["game-image"]}
