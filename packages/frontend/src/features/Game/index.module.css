@@ -215,11 +215,17 @@
 }
 
 .congratulations-message {
+    color: rgba(255, 255, 255, 0.92);
     font-size: 2.4rem;
+    font-family: Gabarito;
+    text-align: center;
 }
 
 .game-duration {
+    color: rgba(255, 255, 255, 0.92);
     font-size: 1.2rem;
+    font-family: Gabarito;
+    text-align: center;
 }
 
 .characters-remaining-container {
