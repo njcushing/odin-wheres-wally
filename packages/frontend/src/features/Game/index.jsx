@@ -66,6 +66,11 @@ const Game = () => {
                 const duration = fetchAPI.getGameDuration();
                 setGameState("ended");
                 setGameDuration(duration);
+                setSelectionResponse({
+                    message: "",
+                    success: false,
+                    element: null,
+                })
             } else {
                 setSelectionResponse({
                     message: `Well done! You found ${characterName}!`,
