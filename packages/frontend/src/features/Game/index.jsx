@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import styles from "./index.module.css";
 
+import { v4 as uuidv4 } from "uuid";
+
 import * as fetchAPI from "./utils/fetchAPI.js";
 
 import NavigationButton from "@/features/NavBar/components/NavigationButton";
@@ -16,9 +18,10 @@ const Game = () => {
     const [selecting, setSelecting] = useState(false);
     const [clickPosition, setClickPosition] = useState([0, 0]);
     const [successfulClicks, setSuccessfulClicks] = useState([]);
-    const [selectionResponseMessage, setSelectionResponseMessage] = useState({
+    const [selectionResponse, setSelectionResponse] = useState({
         message: "",
         success: false,
+        element: null,
     });
 
     const boxSizePx = [72, 72];
@@ -64,15 +67,17 @@ const Game = () => {
                 setGameState("ended");
                 setGameDuration(duration);
             } else {
-                setSelectionResponseMessage({
+                setSelectionResponse({
                     message: `Well done! You found ${characterName}!`,
                     success: true,
+                    element: null,
                 });
             }
         } else {
-            setSelectionResponseMessage({
+            setSelectionResponse({
                 message: `Back luck... ${characterName} isn't there!`,
                 success: false,
+                element: null,
             });
         }
         setSelecting(false);
@@ -108,6 +113,28 @@ const Game = () => {
                 }}
             >Submit to High-Scores</button>
         );
+    }
+
+    if (selectionResponse.message !== "" && selectionResponse.element === null) {
+        setSelectionResponse({
+            ...selectionResponse,
+            element:
+            <h3
+                key={uuidv4()}
+                className={styles["selection-response-message"]}
+                aria-label="selection-response-message"
+                onAnimationEnd={() => { setSelectionResponse({
+                    message: "",
+                    success: false,
+                    element: null,
+                }) }}
+                style={{
+                    color: selectionResponse.success
+                        ? "rgba(23, 194, 1, 0.92)"
+                        : "rgba(228, 27, 0, 0.92)"
+                }}
+            >{selectionResponse.message}</h3>
+        });
     }
 
     return (
@@ -200,20 +227,8 @@ const Game = () => {
                     })}
                     </>
                 :   null}
-                {gameState === "started" && selectionResponseMessage.message !== ""
-                ?   <h3
-                        className={styles["selection-response-message"]}
-                        aria-label="selection-response-message"
-                        onAnimationEnd={() => { setSelectionResponseMessage({
-                            message: "",
-                            success: false,
-                        }) }}
-                        style={{
-                            color: selectionResponseMessage.success
-                                ? "rgba(23, 194, 1, 0.92)"
-                                : "rgba(228, 27, 0, 0.92)"
-                        }}
-                    >{selectionResponseMessage.message}</h3>
+                {gameState === "started"
+                ?   selectionResponse.element
                 :   null}
                 {gameState === "ended"
                 ?   <div className={styles["game-ended-display"]}>
