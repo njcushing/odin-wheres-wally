@@ -51,41 +51,51 @@ const Game = () => {
     }
 
     const characterSelected = (characterName, clickPosition) => {
-        const selectionResult = fetchAPI.postCharacterSelection(characterName, clickPosition);
-        if (selectionResult) {
-            const charactersNew = gameInfo.characters.filter((character) => character.name != characterName)
-            setGameInfo({
-                ...gameInfo,
-                characters: charactersNew,
-            });
-            setSuccessfulClicks([
-                ...successfulClicks,
-                clickPosition
-            ]);
-            if (charactersNew.length === 0) {
-                const duration = fetchAPI.getGameDuration();
-                setGameState("ended");
-                setGameDuration(duration);
-                setSelectionResponse({
-                    message: "",
-                    success: false,
-                    element: null,
-                })
-            } else {
-                setSelectionResponse({
-                    message: `Well done! You found ${characterName}!`,
-                    success: true,
-                    element: null,
-                });
+        const getSelectionResult = async () => {
+            const selectionResult = await fetchAPI.postCharacterSelection(characterName, clickPosition);
+            if (selectionResult) {
+                if (selectionResult.success) {
+                    const charactersNew = gameInfo.characters.filter((character) => character.name != characterName)
+                    setGameInfo({
+                        ...gameInfo,
+                        characters: charactersNew,
+                    });
+                    setSuccessfulClicks([
+                        ...successfulClicks,
+                        [
+                            selectionResult.position_x,
+                            selectionResult.position_y,
+                            selectionResult.width,
+                            selectionResult.height,
+                        ]
+                    ]);
+                    if (charactersNew.length === 0) {
+                        const duration = fetchAPI.getGameDuration();
+                        setGameState("ended");
+                        setGameDuration(duration);
+                        setSelectionResponse({
+                            message: "",
+                            success: false,
+                            element: null,
+                        })
+                    } else {
+                        setSelectionResponse({
+                            message: `Well done! You found ${characterName}!`,
+                            success: true,
+                            element: null,
+                        });
+                    }
+                } else {
+                    setSelectionResponse({
+                        message: `Back luck... ${characterName} isn't there!`,
+                        success: false,
+                        element: null,
+                    });
+                }
             }
-        } else {
-            setSelectionResponse({
-                message: `Back luck... ${characterName} isn't there!`,
-                success: false,
-                element: null,
-            });
+            setSelecting(false);
         }
-        setSelecting(false);
+        getSelectionResult();
     }
 
     const startGameButton = (text) => {
@@ -169,7 +179,7 @@ const Game = () => {
                             height: `100%`,
                         }}
                     ></img>
-                    {successfulClicks.map((clickPosition, i) => {
+                    {successfulClicks.map((click, i) => {
                         return (
                             <div
                                 className={styles["successful-click-area"]}
@@ -179,11 +189,11 @@ const Game = () => {
                                     pointerEvents: "none",
 
                                     position: "absolute",
-                                    left: `${Math.max(Math.min(clickPosition[0] - (boxSizePx[0] / 2), gameInfo.imageSize[0] - boxSizePx[0]), 0)}px`,
-                                    top: `${Math.max(Math.min(clickPosition[1] - (boxSizePx[1] / 2), gameInfo.imageSize[1] - boxSizePx[1]), 0)}px`,
+                                    left: `${Math.max(Math.min(click[0] - (click[2] / 2), gameInfo.imageSize[0] - click[2]), 0)}px`,
+                                    top: `${Math.max(Math.min(click[1] - (click[3] / 2), gameInfo.imageSize[1] - click[3]), 0)}px`,
                                     
-                                    width: `${boxSizePx[0]}px`,
-                                    height: `${boxSizePx[1]}px`,
+                                    width: `${click[2]}px`,
+                                    height: `${click[3]}px`,
                                 }}
                             ></div>
                         );

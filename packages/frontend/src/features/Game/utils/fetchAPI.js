@@ -30,8 +30,37 @@ export const getGameInformation = async () => {
     }
 };
 
-export const postCharacterSelection = (character, clickPosition) => {
-    return true;
+export const postCharacterSelection = async (characterName, clickPosition) => {
+    const body = {
+        character_name: characterName,
+        click_position: clickPosition,
+    };
+
+    return await fetch(
+        `${import.meta.env.VITE_SERVER_DOMAIN}/game/6572fc2d12becab50ff4f90f`,
+        {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        }
+    )
+        .then((response) => {
+            if (response.status >= 400) {
+                throw new Error(`Request error: status ${response.status}`);
+            } else {
+                return response.json();
+            }
+        })
+        .then((response) => {
+            console.log(response);
+            return response.data;
+        })
+        .catch((error) => {
+            throw new Error(error);
+        });
 };
 
 export const getGameDuration = () => {
