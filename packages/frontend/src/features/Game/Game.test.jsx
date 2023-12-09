@@ -269,6 +269,21 @@ describe("UI/DOM Testing...", () => {
             expect(successfulClickAreas.length).toBe(1);
         })
     });
+    describe("The 'selection response message'...", () => {
+        test(`Should be displayed whenever a character is selected from the drop
+         down box`, async () => {
+            const user = userEvent.setup();
+            await startGame(user);
+            let selectionResponseMessage = screen.queryByRole("heading", { name: "selection-response-message" });
+            expect(selectionResponseMessage).toBeNull();
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            await user.click(charSelectionOptions[0]);
+            selectionResponseMessage = screen.getByRole("heading", { name: "selection-response-message" });
+            expect(selectionResponseMessage).toBeInTheDocument();
+         });
+    });
     describe("The 'congratulations' message...", () => {
         test("Should be displayed when the last character is selected", async () => {
             const user = userEvent.setup();

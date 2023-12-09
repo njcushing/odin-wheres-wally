@@ -16,6 +16,10 @@ const Game = () => {
     const [selecting, setSelecting] = useState(false);
     const [clickPosition, setClickPosition] = useState([0, 0]);
     const [successfulClicks, setSuccessfulClicks] = useState([]);
+    const [selectionResponseMessage, setSelectionResponseMessage] = useState({
+        message: "",
+        success: false,
+    });
 
     const boxSizePx = [72, 72];
 
@@ -59,7 +63,17 @@ const Game = () => {
                 const duration = fetchAPI.getGameDuration();
                 setGameState("ended");
                 setGameDuration(duration);
+            } else {
+                setSelectionResponseMessage({
+                    message: `Well done! You found ${characterName}!`,
+                    success: true,
+                });
             }
+        } else {
+            setSelectionResponseMessage({
+                message: `Back luck... ${characterName} isn't there!`,
+                success: false,
+            });
         }
         setSelecting(false);
     }
@@ -185,6 +199,21 @@ const Game = () => {
                         );
                     })}
                     </>
+                :   null}
+                {gameState === "started" && selectionResponseMessage.message !== ""
+                ?   <h3
+                        className={styles["selection-response-message"]}
+                        aria-label="selection-response-message"
+                        onAnimationEnd={() => { setSelectionResponseMessage({
+                            message: "",
+                            success: false,
+                        }) }}
+                        style={{
+                            color: selectionResponseMessage.success
+                                ? "rgba(23, 194, 1, 0.92)"
+                                : "rgba(228, 27, 0, 0.92)"
+                        }}
+                    >{selectionResponseMessage.message}</h3>
                 :   null}
                 {gameState === "ended"
                 ?   <div className={styles["game-ended-display"]}>
