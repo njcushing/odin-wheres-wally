@@ -1,31 +1,30 @@
-const getHighScores = () => {
-    return [
+const getHighScores = async () => {
+    const highScores = await fetch(
+        `${
+            import.meta.env.VITE_SERVER_DOMAIN
+        }/game/6572fc2d12becab50ff4f90f/high-scores`,
         {
-            firstName: "Davey",
-            lastName: "Jones",
-            time: 213,
-        },
-        {
-            firstName: "Elizabeth",
-            lastName: "Swann",
-            time: 297,
-        },
-        {
-            firstName: "Jack",
-            lastName: "Sparrow",
-            time: 345,
-        },
-        {
-            firstName: "John",
-            lastName: "Smith",
-            time: 380,
-        },
-        {
-            firstName: "William",
-            lastName: "Turner",
-            time: 645,
-        },
-    ];
+            method: "GET",
+            mode: "cors",
+        }
+    )
+        .then((response) => {
+            if (response.status >= 400) {
+                throw new Error(`Request error: status ${response.status}`);
+            } else {
+                return response.json();
+            }
+        })
+        .then((response) => response.data)
+        .catch((error) => {
+            throw new Error(error);
+        });
+    if (highScores) {
+        console.log(highScores);
+        return highScores;
+    } else {
+        return [];
+    }
 };
 
 export default getHighScores;
