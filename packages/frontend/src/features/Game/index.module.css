@@ -79,6 +79,10 @@
 }
 
 .game-image {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.2rem;
+    font-family: Gabarito;
+
     border-radius: 8px;
 }
 
