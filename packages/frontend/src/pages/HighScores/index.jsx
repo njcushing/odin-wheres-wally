@@ -2,17 +2,33 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styles from "./index.module.css";
 
+import { DateTime } from "luxon";
 import getHighScores from "./utils/getHighScores";
 import convertTimeSecondsToHours from "@/utils/convertTimeSecondsToHours";
 
 import NavigationButton from "@/features/NavBar/components/NavigationButton";
 
+var isDate = function(date) {
+    return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+}
+
+const formatDate = (dateString) => {
+    if (dateString && isDate(dateString)) {
+        return DateTime.fromJSDate(new Date(dateString)).toLocaleString(
+            DateTime.DATETIME_SHORT_WITH_SECONDS
+        );
+    }
+    return "Unknown";
+}
+
 const HighScores = () => {
     const [highScoreList, setHighScoreList] = useState([]);
 
     useEffect(() => {
-        const highScoreListNew = getHighScores();
-        setHighScoreList(highScoreListNew);
+        (async () => {
+            const highScoreListNew = await getHighScores();
+            setHighScoreList(highScoreListNew);
+        })();
     }, []);
 
     return (
@@ -40,7 +56,10 @@ const HighScores = () => {
                             <h2
                                 className={styles["high-score-information"]}
                                 aria-label="high-score-information"
-                            >{`${i + 1}: ${score.firstName} ${score.lastName} ${time.hours}:${time.minutes}:${time.seconds}`}</h2>
+                            >{`${i + 1}: ${score.first_name} ${score.last_name} ${time.hours}:${time.minutes}:${time.seconds}`}</h2>
+                            <h3
+                                className={styles["high-score-date-achieved"]}
+                            >Date achieved: {formatDate(score.date_achieved)}</h3>
                         </li>
                     );
                 })}
