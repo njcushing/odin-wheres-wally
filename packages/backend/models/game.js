@@ -17,6 +17,7 @@ const GameSchema = new Schema({
             height: { type: Number },
         },
     ],
+    highscores: [{ type: Schema.Types.ObjectId, ref: "HighScore" }],
 });
 
 export default mongoose.model("Game", GameSchema);
