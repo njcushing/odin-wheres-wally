@@ -51,7 +51,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.6rem;
+    gap: 1.2rem;
 
     list-style: none;
 
@@ -64,65 +64,71 @@
 .high-score-bronze,
 .high-score {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0rem;
 
     font-family: Gabarito;
 }
 
-.high-score-gold {
-    gap: 1.2rem;
-}
-
-.high-score-gold > h2 {
+.high-score-gold > .high-score-information {
     color: rgba(238, 202, 0, 0.92);
     font-size: 2.4rem;
+}
 
+.high-score-gold > .high-score-information,
+.high-score-gold > .high-score-date-achieved {
     opacity: 0%;
     transform: translateY(0.5rem);
     animation: 0.3s ease-in-out 2.0s 1 normal forwards fade-in;
 }
 
-.high-score-silver {
-    gap: 1.0rem;
-}
-
-.high-score-silver > h2 {
+.high-score-silver > .high-score-information {
     color: rgba(192, 192, 192, 0.92);
     font-size: 2.0rem;
+}
 
+.high-score-silver > .high-score-information,
+.high-score-silver > .high-score-date-achieved {
     opacity: 0%;
     transform: translateY(0.5rem);
     animation: 0.3s ease-in-out 1.4s 1 normal forwards fade-in;
 }
 
-.high-score-bronze {
-    gap: 0.8rem;
-}
-
-.high-score-bronze > h2 {
+.high-score-bronze > .high-score-information {
     color: rgba(205, 127, 50, 0.92);
     font-size: 1.6rem;
+}
 
+.high-score-bronze > .high-score-information,
+.high-score-bronze > .high-score-date-achieved {
     opacity: 0%;
     transform: translateY(0.5rem);
     animation: 0.3s ease-in-out 0.9s 1 normal forwards fade-in;
 }
 
-.high-score {
-    gap: 0.6rem;
-}
-
-.high-score > h2 {
+.high-score > .high-score-information {
     color: rgba(255, 255, 255, 0.92);
     font-size: 1.2rem;
+}
 
+.high-score > .high-score-information,
+.high-score > .high-score-date-achieved {
     opacity: 0%;
     transform: translateY(0.5rem);
     animation: 0.3s ease-in-out 0.55s 1 normal forwards fade-in;
 }
 
-.high-score-information {
+.high-score-information,
+.high-score-date-achieved {
+    text-align: center;
+
     padding: 0rem;
     margin: 0rem;
+}
+
+.high-score-date-achieved {
+    font-size: 0.8rem;
 }
 
 .navigation-button {
