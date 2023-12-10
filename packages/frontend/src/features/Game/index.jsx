@@ -63,8 +63,7 @@ const Game = () => {
                     setSuccessfulClicks([
                         ...successfulClicks,
                         [
-                            selectionResult.position_x,
-                            selectionResult.position_y,
+                            selectionResult.position,
                             selectionResult.width,
                             selectionResult.height,
                         ]
@@ -189,11 +188,11 @@ const Game = () => {
                                     pointerEvents: "none",
 
                                     position: "absolute",
-                                    left: `${Math.max(Math.min(click[0] - (click[2] / 2), gameInfo.imageSize[0] - click[2]), 0)}px`,
-                                    top: `${Math.max(Math.min(click[1] - (click[3] / 2), gameInfo.imageSize[1] - click[3]), 0)}px`,
+                                    left: `${Math.max(Math.min(click[0][0] - (click[1] / 2), gameInfo.imageSize[0] - click[1]), 0)}px`,
+                                    top: `${Math.max(Math.min(click[0][1] - (click[2] / 2), gameInfo.imageSize[1] - click[2]), 0)}px`,
                                     
-                                    width: `${click[2]}px`,
-                                    height: `${click[3]}px`,
+                                    width: `${click[1]}px`,
+                                    height: `${click[2]}px`,
                                 }}
                             ></div>
                         );

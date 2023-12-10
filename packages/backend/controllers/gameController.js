@@ -169,8 +169,7 @@ export const gamePost = [
                     "Character not at location",
                     {
                         success: false,
-                        position_x: null,
-                        position_y: null,
+                        position: null,
                         width: null,
                         height: null,
                     }
@@ -182,8 +181,7 @@ export const gamePost = [
                     "Character found at location",
                     {
                         success: true,
-                        position_x: character.positionX,
-                        position_y: character.positionY,
+                        position: [character.positionX, character.positionY],
                         width: character.width,
                         height: character.height,
                     }
