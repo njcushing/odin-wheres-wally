@@ -34,7 +34,22 @@ const successfulRequest = (res, status, message, data) => {
 };
 
 const validateMandatoryFields = [
-    // ...
+    body("first_name", "'first_name' field (string) must not be empty")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("last_name", "'last_name' field (string) must not be empty")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("time")
+        .exists()
+        .not()
+        .isEmpty()
+        .withMessage("'time' field (float) must not be empty")
+        .isFloat({ min: 0 })
+        .toFloat()
+        .withMessage("'time' field (float) must not be less than 0"),
 ];
 
 export const highscoreGet = asyncHandler(async (req, res, next) => {
@@ -50,9 +65,52 @@ export const highscoreGet = asyncHandler(async (req, res, next) => {
         })
         .exec();
     if (game === null) return next(gameNotFound(gameId));
-    return successfulRequest(res, 200, "High Score(s) found", game.highscores);
+    return successfulRequest(res, 200, "High-Score(s) found", game.highscores);
 });
 
-export const highscorePost = asyncHandler(async (req, res, next) => {
-    return successfulRequest(res, 200, "High Score submitted", null);
-});
+export const highscorePost = [
+    ...validateMandatoryFields,
+    asyncHandler(async (req, res, next) => {
+        const gameId = req.params.gameId;
+        if (!validateGameId(next, gameId)) return;
+        let game = await Game.findById(gameId).exec();
+        if (game === null) return next(gameNotFound(gameId));
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const errorString = compileValidationErrors(errors.array());
+            return next(
+                createError(400, `Unable to submit high-score: ${errorString}`)
+            );
+        }
+
+        const newHighscoreId = new mongoose.Types.ObjectId();
+        const highscore = new HighScore({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            time: req.body.time,
+            date_achieved: Date.now(),
+            _id: newHighscoreId,
+        });
+
+        const updatedGame = await Game.findByIdAndUpdate(gameId, {
+            $push: { highscores: newHighscoreId },
+        });
+        if (updatedGame === null) {
+            return next(
+                createError(
+                    404,
+                    `Specified game not found at: ${gameId}. High-Score was not submitted`
+                )
+            );
+        } else {
+            await highscore.save();
+            return successfulRequest(
+                res,
+                201,
+                `High-Score submitted`,
+                highscore
+            );
+        }
+    }),
+];
