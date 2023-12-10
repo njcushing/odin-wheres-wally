@@ -54,10 +54,7 @@ export const postCharacterSelection = async (characterName, clickPosition) => {
                 return response.json();
             }
         })
-        .then((response) => {
-            console.log(response);
-            return response.data;
-        })
+        .then((response) => response.data)
         .catch((error) => {
             throw new Error(error);
         });
