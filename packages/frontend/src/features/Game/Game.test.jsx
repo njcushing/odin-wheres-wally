@@ -52,7 +52,14 @@ const getGameInformation = vi.fn(() => {
         characters: characters,
     }
 })
-const postCharacterSelection = vi.fn((characterName, clickPosition) => true);
+const postCharacterSelection = vi.fn((characterName, clickPosition) => {
+    return {
+        success: true,
+        position: [0, 0],
+        width: 0,
+        height: 0,
+    }
+});
 vi.mock('./utils/fetchAPI', async () => {
     const actual = await vi.importActual("./utils/fetchAPI");
     return {
