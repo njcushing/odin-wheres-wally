@@ -38,7 +38,19 @@ const validateMandatoryFields = [
 ];
 
 export const highscoreGet = asyncHandler(async (req, res, next) => {
-    return successfulRequest(res, 200, "High Score(s) found", null);
+    const gameId = req.params.gameId;
+    if (!validateGameId(next, gameId)) return;
+    let game = await Game.findById(gameId)
+        .populate({
+            path: "highscores",
+            options: {
+                sort: { time: 1 },
+                limit: 10,
+            },
+        })
+        .exec();
+    if (game === null) return next(gameNotFound(gameId));
+    return successfulRequest(res, 200, "High Score(s) found", game.highscores);
 });
 
 export const highscorePost = asyncHandler(async (req, res, next) => {
