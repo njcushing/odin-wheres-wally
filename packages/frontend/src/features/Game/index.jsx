@@ -10,7 +10,7 @@ import NavigationButton from "@/features/NavBar/components/NavigationButton";
 const Game = () => {
     const [gameState, setGameState] = useState("waiting");
     const [gameInfo, setGameInfo] = useState({
-        image: null,
+        imageUrl: null,
         imageSize: [800, 800],
         characters: []
     });
@@ -30,7 +30,7 @@ const Game = () => {
         const getGameInfo = async () => {
             const newInfo = await fetchAPI.getGameInformation();
             setGameInfo({
-                image: newInfo.image,
+                imageUrl: newInfo.imageUrl,
                 imageSize: newInfo.imageSize,
                 characters: newInfo.characters,
             });
@@ -170,7 +170,7 @@ const Game = () => {
                 ?   <>
                     <img
                         className={styles["game-image"]}
-                        src={gameInfo.image}
+                        src={gameInfo.imageUrl}
                         alt="Image containing the characters to locate."
                         onClick={clickedImage}
                         style={{

@@ -21,7 +21,7 @@ export const getGameInformation = async () => {
         });
     if (gameInfo) {
         return {
-            image: gameInfo.imageUrl,
+            imageUrl: gameInfo.imageUrl,
             imageSize: [gameInfo.imageWidth, gameInfo.imageHeight],
             characters: gameInfo.characters,
         };
