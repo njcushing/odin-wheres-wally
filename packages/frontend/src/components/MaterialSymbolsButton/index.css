@@ -1,15 +1,15 @@
-.MaterialSymbolsAnchor {
+.MaterialSymbolsButton {
     display: MaterialSymbolsButton;
     justify-content: center;
     align-items: center;
 
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.92);
     border: 0.15rem solid transparent;
     border-radius: 0.2rem;
     outline: none;
     text-decoration: none;
-
-    transition: border 0.24s ease-in-out 0s;
+    
+    transition: transform 0.2s ease-in-out 0s;
 
     padding: 0rem;
     margin: 0rem;
@@ -25,9 +25,9 @@
 }
 
 .material-symbols-rounded {
-    color: rgba(255, 255, 255, 1);
+    color: rgba(0, 0, 0, 0.92);
 
-    transition: transform 0.24s ease-in-out 0s;
+    transition: transform 0.2s ease-in-out 0s;
 
     /* To prevent cursor highlighting of the icon */
     -webkit-touch-callout: none;    /* iOS Safari */
@@ -41,7 +41,7 @@
 
 @media (hover: hover) {
     .MaterialSymbolsButton:hover {
-        border-color: rgba(255, 255, 255, 0.5);
+        transform: scale(107%);
     }
     .MaterialSymbolsButton:hover ul .material-symbols-rounded {
         transform: scale(115%);
@@ -49,7 +49,8 @@
 }
 
 .MaterialSymbolsButton:focus {
-    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(107%);
+    background-color: rgba(222, 222, 222, 0.92);
 }
 .MaterialSymbolsButton:focus ul .material-symbols-rounded {
     transform: scale(115%);
