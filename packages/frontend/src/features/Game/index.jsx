@@ -50,12 +50,12 @@ const Game = () => {
         }
     }
 
-    const characterSelected = (characterName, clickPosition) => {
+    const characterSelected = (characterId, characterName, clickPosition) => {
         const getSelectionResult = async () => {
-            const selectionResult = await fetchAPI.postCharacterSelection(characterName, clickPosition);
+            const selectionResult = await fetchAPI.postCharacterSelection(characterId, clickPosition);
             if (selectionResult) {
                 if (selectionResult.success) {
-                    const charactersNew = gameInfo.characters.filter((character) => character.name != characterName)
+                    const charactersNew = gameInfo.characters.filter((character) => character.id != characterId)
                     setGameInfo({
                         ...gameInfo,
                         characters: charactersNew,
@@ -226,7 +226,7 @@ const Game = () => {
                                             onClick={(e) => {
                                                 e.target.blur();
                                                 e.preventDefault();
-                                                characterSelected(character.name, clickPosition);
+                                                characterSelected(character.id, character.name, clickPosition);
                                             }}
                                             onMouseLeave={(e) => {
                                                 e.currentTarget.blur();

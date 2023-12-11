@@ -30,14 +30,15 @@ export const getGameInformation = async () => {
     }
 };
 
-export const postCharacterSelection = async (characterName, clickPosition) => {
+export const postCharacterSelection = async (characterId, clickPosition) => {
     const body = {
-        character_name: characterName,
         click_position: clickPosition,
     };
 
     return await fetch(
-        `${import.meta.env.VITE_SERVER_DOMAIN}/game/6572fc2d12becab50ff4f90f`,
+        `${
+            import.meta.env.VITE_SERVER_DOMAIN
+        }/game/6572fc2d12becab50ff4f90f/character/${characterId}/check-position`,
         {
             method: "POST",
             mode: "cors",
