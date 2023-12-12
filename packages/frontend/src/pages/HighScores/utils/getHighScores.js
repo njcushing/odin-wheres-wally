@@ -20,7 +20,6 @@ const getHighScores = async () => {
             throw new Error(error);
         });
     if (highScores) {
-        console.log(highScores);
         return highScores;
     } else {
         return [];
