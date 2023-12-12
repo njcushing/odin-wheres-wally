@@ -194,15 +194,21 @@
     position: absolute;
 
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    gap: 0.8rem;
 
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 8px;
 
     width: 100%;
     height: 100%;
+}
+
+.game-ended-information {
+    place-self: center;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 
     opacity: 0%;
     transform: translateY(0.5rem);
@@ -230,6 +236,14 @@
     font-size: 1.2rem;
     font-family: Gabarito;
     text-align: center;
+}
+
+.high-score-form {
+    place-self: center;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
 }
 
 .characters-remaining-container {

@@ -69,6 +69,6 @@ export const getGameDuration = () => {
     return `${time.hours}:${time.minutes}:${time.seconds}`;
 };
 
-export const postHighScoreSubmission = () => {
+export const postHighScoreSubmission = async () => {
     return;
 };

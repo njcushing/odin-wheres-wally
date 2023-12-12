@@ -9,6 +9,8 @@ import Game from './index.jsx'
 
 import * as fetchAPI from "./utils/fetchAPI.js";
 
+import MaterialSymbolsButton from '@/components/MaterialSymbolsButton'
+
 const renderComponent = () => {
     render(<Game />);
 }
@@ -29,18 +31,77 @@ vi.mock('@/features/NavBar/components/NavigationButton', () => ({
     }
 }));
 
+vi.mock('./components/HighScoreForm', () => ({ 
+    default: ({
+        onCloseHandler,
+        onSubmitHandler,
+        submissionErrors,
+    }) => {
+        return (
+            <div
+                aria-label="high-score-form"
+            >
+                <MaterialSymbolsButton onClickHandler={onCloseHandler}/>
+                <form method="POST" action="">
+                    <label>First Name *
+                        <input
+                            type="text"
+                            id="first-name"
+                            name="first_name"
+                            required
+                            defaultValue="John"
+                        ></input>
+                    </label>
+                    <label>Last Name *
+                        <input
+                            type="text"
+                            id="last-name"
+                            name="last_name"
+                            required
+                            defaultValue="Smith"
+                        ></input>
+                    </label>
+                    <button
+                        aria-label="submit-high-score-from-form"
+                        type="submit"
+                        onClick={(e) => { onSubmitHandler(e); }}
+                    ></button>
+                </form>
+            </div>
+        );
+    }
+}));
+
+vi.mock('@/components/MaterialSymbolsButton', () => ({ 
+    default: ({
+        onClickHandler,
+    }) => {
+        return (
+            <button
+                onClick={(e) => {
+                    onClickHandler(e);
+                }}
+                aria-label="material-symbols-button"
+            ></button>
+        );
+    }
+}));
+
 const image = null;
 const imageSize = [800, 800];
 const characters = [
     {
+        id: 1,
         name: "1",
         imageUrl: null
     },
     {
+        id: 2,
         name: "2",
         imageUrl: null
     },
     {
+        id: 3,
         name: "3",
         imageUrl: null
     }
@@ -248,7 +309,7 @@ describe("UI/DOM Testing...", () => {
             await user.click(charSelectionOptions[0]);
             expect(charSelectionBox).not.toBeInTheDocument();
         });
-        test(`Should NOT contain any characters that have been successfully
+        test(`Should not contain any characters that have been successfully
         selected`, async () => {
             const user = userEvent.setup();
             await startGame(user);
@@ -347,7 +408,7 @@ describe("UI/DOM Testing...", () => {
             submitToHighScoresButton = screen.getByRole("button", { name: /Submit to High-Scores/i });
             expect(submitToHighScoresButton).toBeInTheDocument();
         });
-        test("Should call the postHighScoreSubmission function when clicked", async () => {
+        test("Should display the HighScoreForm component when clicked", async () => {
             const user = userEvent.setup();
             getGameInformation.mockReturnValueOnce({
                 image: image,
@@ -360,8 +421,30 @@ describe("UI/DOM Testing...", () => {
             const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
             await user.click(charSelectionOptions[0]);
             const submitToHighScoresButton = screen.getByRole("button", { name: /Submit to High-Scores/i });
-            const postHighScoreSubmissionSpy = vi.spyOn(fetchAPI, "postHighScoreSubmission");
             await user.click(submitToHighScoresButton);
+            const highScoreFormComponent = screen.getByRole("generic", { name: "high-score-form" });
+            expect(highScoreFormComponent).toBeInTheDocument();
+        });
+    });
+    describe("The HighScoreForm component...", () => {
+        test(`When correctly submitted, should invoke the
+         postHighScoreSubmission function`, async () => {
+            const user = userEvent.setup();
+            getGameInformation.mockReturnValueOnce({
+                image: image,
+                imageSize: imageSize,
+                characters: ["1"],
+            });
+            await startGame(user);
+            const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
+            await user.click(gameImage);
+            const charSelectionOptions = screen.getAllByRole("listitem", { name: "character-selection-option" });
+            await user.click(charSelectionOptions[0]);
+            const submitToHighScoresButton = screen.getByRole("button", { name: /Submit to High-Scores/i });
+            await user.click(submitToHighScoresButton);
+            const postHighScoreSubmissionSpy = vi.spyOn(fetchAPI, "postHighScoreSubmission");
+            const submitButton = screen.getByRole("button", { name: "submit-high-score-from-form" });
+            await user.click(submitButton);
             expect(postHighScoreSubmissionSpy).toHaveBeenCalledTimes(1);
         });
     });

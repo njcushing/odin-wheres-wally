@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styles from "./index.module.css";
 
 import { v4 as uuidv4 } from "uuid";
@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import * as fetchAPI from "./utils/fetchAPI.js";
 
 import NavigationButton from "@/features/NavBar/components/NavigationButton";
+import HighScoreForm from "./components/HighScoreForm";
 
 const Game = () => {
     const [gameState, setGameState] = useState("waiting");
@@ -23,8 +24,19 @@ const Game = () => {
         success: false,
         element: null,
     });
+    const [submittingHighScore, setSubmittingHighScore] = useState(false);
+    const [highScoreSubmissionErrors, setHighScoreSubmissionErrors] = useState([]);
 
     const boxSizePx = [72, 72];
+
+    const resetGame = () => {
+        setGameState("waiting");
+        setSubmittingHighScore(false);
+        setHighScoreSubmissionErrors([]);
+        setSelecting(false);
+        setGameDuration(null);
+        setSuccessfulClicks([]);
+    }
 
     const startGame = () => {
         const getGameInfo = async () => {
@@ -34,9 +46,8 @@ const Game = () => {
                 imageSize: newInfo.imageSize,
                 characters: newInfo.characters,
             });
+            resetGame();
             setGameState("started");
-            setGameDuration(null);
-            setSuccessfulClicks([]);
         }
         getGameInfo();
     }
@@ -97,6 +108,28 @@ const Game = () => {
         getSelectionResult();
     }
 
+    const submitHighScore = useCallback(async (e) => {
+        e.currentTarget.blur();
+        e.preventDefault(); // Prevent form submission; handle manually
+    
+        const formData = new FormData(e.target.form);
+        const formFields = Object.fromEntries(formData);
+        const formDataJSON = JSON.stringify(formFields);
+
+        // Client-side validation
+        const errors = [];
+        if (formFields.first_name.length < 1) errors.push("Please fill in the First Name field.");
+        if (formFields.last_name.length < 1) errors.push("Please fill in the Last Name field.");
+        if (errors.length > 0) {
+            setHighScoreSubmissionErrors(errors);
+            return;
+        }
+
+        await fetchAPI.postHighScoreSubmission();
+
+        resetGame();
+    }, []);
+
     const startGameButton = (text) => {
         return (
             <button
@@ -120,7 +153,7 @@ const Game = () => {
                 onClick={(e) => {
                     e.target.blur();
                     e.preventDefault();
-                    fetchAPI.postHighScoreSubmission();
+                    setSubmittingHighScore(true);
                 }}
                 onMouseLeave={(e) => {
                     e.currentTarget.blur();
@@ -248,18 +281,32 @@ const Game = () => {
                 :   null}
                 {gameState === "ended"
                 ?   <div className={styles["game-ended-display"]}>
-                    <h1
-                        className={styles["congratulations-message"]}
-                        aria-label="congratulations-message"
-                    >Congratulations!</h1>
-                    {gameDuration
-                    ?   <h3
-                            className={styles["game-duration"]}
-                            aria-label="game-duration"
-                        >Your final time was: {gameDuration}</h3>
-                    :   null}
-                    {startGameButton("Play Again")}
-                    {submitToHighScoresButton()}
+                    {!submittingHighScore
+                    ?   <div
+                            className={styles["game-ended-information"]}
+                            key={uuidv4()} // Trick to restart animation
+                        >
+                        <h1
+                            className={styles["congratulations-message"]}
+                            aria-label="congratulations-message"
+                        >Congratulations!</h1>
+                        {gameDuration
+                        ?   <h3
+                                className={styles["game-duration"]}
+                                aria-label="game-duration"
+                            >Your final time was: {gameDuration}</h3>
+                        :   null}
+                        {startGameButton("Play Again")}
+                        {submitToHighScoresButton()}
+                        </div>
+                    :   <div className={styles["high-score-form"]}>
+                        <HighScoreForm
+                            onCloseHandler={() => setSubmittingHighScore(false)}
+                            onSubmitHandler={submitHighScore}
+                            submissionErrors={highScoreSubmissionErrors}
+                        />
+                        </div>
+                    }
                     </div>
                 :   null}
             </div>
