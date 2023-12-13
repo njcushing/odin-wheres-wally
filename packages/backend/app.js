@@ -5,8 +5,9 @@ import createError from "http-errors";
 import express from "express";
 import cors from "cors";
 import passport from "passport";
-import passportLocal from "passport-local";
-const LocalStrategy = passportLocal.Strategy;
+import passportJWT from "passport-jwt";
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
 import { fileURLToPath } from "url";
 import path from "path";
 import logger from "morgan";
@@ -40,21 +41,18 @@ const __dirname = path.dirname(__filename);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-// Verify current login details
+// Verify token
 passport.use(
-    "local",
-    new LocalStrategy(async (username, password, done) => {
-        try {
-            const [status, user, msg] = await validateUserCredentials(
-                username,
-                password
-            );
-            if (!status) return done(null, false, { message: msg });
-            return done(null, user);
-        } catch (err) {
-            return done(err);
+    "jwt",
+    new JWTStrategy(
+        {
+            jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+            secretOrKey: process.env.AUTH_SECRET_KEY,
+        },
+        (jwt_payload, done) => {
+            return done(null, jwt_payload);
         }
-    })
+    )
 );
 
 app.use(logger("dev"));

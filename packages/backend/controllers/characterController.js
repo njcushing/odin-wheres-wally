@@ -2,9 +2,13 @@ import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import createError from "http-errors";
+import passport from "passport";
+import jwt from "jsonwebtoken";
 
 import Game from "../models/game.js";
 import Character from "../models/character.js";
+
+import checkTokenState from "../utils/checkTokenState.js";
 
 export const validateDocumentIds = (next, gameId, characterId) => {
     const validGameId = mongoose.Types.ObjectId.isValid(gameId);
@@ -78,7 +82,9 @@ export const characterCheckPosition = [
         const gameId = req.params.gameId;
         const characterId = req.params.characterId;
         if (!validateDocumentIds(next, gameId, characterId)) return;
-        let game = await Game.findById(gameId).exec();
+        let game = await Game.findById(gameId)
+            .populate({ path: "characters", populate: { path: "character" } })
+            .exec();
         let character = await Character.findById(characterId).exec();
         if (game === null) return next(gameNotFound(gameId));
         if (character === null) return next(characterNotFound(characterId));
@@ -86,7 +92,7 @@ export const characterCheckPosition = [
         let characterInScene = false;
         let charInfo;
         for (let i = 0; i < game.characters.length; i++) {
-            if (game.characters[i].character.toString() === characterId) {
+            if (game.characters[i].character._id.toString() === characterId) {
                 characterInScene = true;
                 charInfo = { ...game.characters[i]._doc };
                 continue;
@@ -147,32 +153,73 @@ export const characterCheckPosition = [
                 touches = false;
             }
 
-            // Respond
-            if (!contains && !overlaps && !touches) {
-                return successfulRequest(
-                    res,
-                    200,
-                    "Character not at location",
-                    {
-                        success: false,
-                        position: null,
-                        width: null,
-                        height: null,
+            // Create new/extract existing token
+            passport.authenticate(
+                "jwt",
+                { session: false },
+                (err, payload, options) => {
+                    const token = checkTokenState(
+                        typeof payload === "object" ? payload.token : {},
+                        gameId
+                    );
+
+                    // Check if character has already been found
+                    for (let i = 0; i < token.charactersFound.length; i++) {
+                        if (token.charactersFound[i].id === characterId) {
+                            return next(
+                                createError(
+                                    400,
+                                    `Character: ${characterId} has already been found`
+                                )
+                            );
+                        }
                     }
-                );
-            } else {
-                return successfulRequest(
-                    res,
-                    200,
-                    "Character found at location",
-                    {
-                        success: true,
-                        position: [charInfo.positionX, charInfo.positionY],
-                        width: charInfo.width,
-                        height: charInfo.height,
+
+                    // Add new character info to token array if found
+                    let success = false;
+                    if (contains || overlaps || touches) {
+                        token.charactersFound.push({
+                            id: characterId,
+                            position: [charInfo.positionX, charInfo.positionY],
+                            width: charInfo.width,
+                            height: charInfo.height,
+                        });
+                        success = true;
                     }
-                );
-            }
+
+                    const charactersFound = [...token.charactersFound];
+
+                    jwt.sign(
+                        { token },
+                        process.env.AUTH_SECRET_KEY,
+                        (err, token) => {
+                            if (err) {
+                                return next(
+                                    createError(
+                                        401,
+                                        `Could not create token: ${err}`
+                                    )
+                                );
+                            } else {
+                                return successfulRequest(
+                                    res,
+                                    200,
+                                    success
+                                        ? "Character found at location"
+                                        : "Character not at location",
+                                    {
+                                        selectionResponse: {
+                                            success: success,
+                                            charactersFound: charactersFound,
+                                        },
+                                        token: `Bearer ${token}`,
+                                    }
+                                );
+                            }
+                        }
+                    );
+                }
+            )(req, res, next);
         }
     }),
 ];

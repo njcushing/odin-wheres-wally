@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import createError from "http-errors";
+import passport from "passport";
+import jwt from "jsonwebtoken";
 
 import Game from "../models/game.js";
+
+import checkTokenState from "../utils/checkTokenState.js";
 
 const validateGameId = (next, gameId) => {
     if (!mongoose.Types.ObjectId.isValid(gameId)) {
@@ -46,6 +50,40 @@ export const gameGet = asyncHandler(async (req, res, next) => {
             imageHeight: game.imageHeight,
             characters: charactersTrimmed,
         };
-        return successfulRequest(res, 200, "Game found", gameTrimmed);
+
+        // Create new/extract existing token
+        passport.authenticate(
+            "jwt",
+            { session: false },
+            (err, payload, options) => {
+                const token = checkTokenState(
+                    typeof payload === "object" ? payload.token : {},
+                    gameId
+                );
+
+                const charactersFound = [...token.charactersFound];
+
+                jwt.sign(
+                    { token },
+                    process.env.AUTH_SECRET_KEY,
+                    (err, token) => {
+                        if (err) {
+                            return next(
+                                createError(
+                                    401,
+                                    `Could not create token: ${err}`
+                                )
+                            );
+                        } else {
+                            return successfulRequest(res, 200, "Game found", {
+                                gameInfo: gameTrimmed,
+                                charactersFound: charactersFound,
+                                token: `Bearer ${token}`,
+                            });
+                        }
+                    }
+                );
+            }
+        )(req, res, next);
     }
 });

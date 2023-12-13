@@ -31,8 +31,6 @@ const HighScores = () => {
         })();
     }, []);
 
-    console.log("wtf");
-
     return (
         <div className={styles["wrapper"]}>
         <div className={styles["container"]}>
@@ -49,7 +47,6 @@ const HighScores = () => {
                     if (i === 1) position = "-silver";
                     if (i === 2) position = "-bronze";
                     let time = convertTimeSecondsToHours(score.time);
-                    console.log(i);
                     return (
                         <li
                             className={styles[`high-score${position}`]}

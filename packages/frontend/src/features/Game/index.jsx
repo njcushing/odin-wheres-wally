@@ -18,7 +18,7 @@ const Game = () => {
     const [gameDuration, setGameDuration] = useState(null);
     const [selecting, setSelecting] = useState(false);
     const [clickPosition, setClickPosition] = useState([0, 0]);
-    const [successfulClicks, setSuccessfulClicks] = useState([]);
+    const [charactersFound, setCharactersFound] = useState([]);
     const [selectionResponse, setSelectionResponse] = useState({
         message: "",
         success: false,
@@ -35,18 +35,20 @@ const Game = () => {
         setHighScoreSubmissionErrors([]);
         setSelecting(false);
         setGameDuration(null);
-        setSuccessfulClicks([]);
+        setCharactersFound([]);
+        setSelectionResponse({
+            message: "",
+            success: false,
+            element: null,
+        });
     }
 
-    const startGame = () => {
+    const startGame = (restarting) => {
         const getGameInfo = async () => {
-            const newInfo = await fetchAPI.getGameInformation();
-            setGameInfo({
-                imageUrl: newInfo.imageUrl,
-                imageSize: newInfo.imageSize,
-                characters: newInfo.characters,
-            });
+            const newInfo = await fetchAPI.getGameInformation(restarting);
+            setGameInfo(newInfo.gameInfo);
             resetGame();
+            setCharactersFound(newInfo.charactersFound);
             setGameState("started");
         }
         getGameInfo();
@@ -62,39 +64,16 @@ const Game = () => {
     }
 
     const characterSelected = (characterId, characterName, clickPosition) => {
-        const getSelectionResult = async () => {
-            const selectionResult = await fetchAPI.postCharacterSelection(characterId, clickPosition);
-            if (selectionResult) {
-                if (selectionResult.success) {
-                    const charactersNew = gameInfo.characters.filter((character) => character.id != characterId)
-                    setGameInfo({
-                        ...gameInfo,
-                        characters: charactersNew,
+        (async () => {
+            const response = await fetchAPI.postCharacterSelection(characterId, clickPosition);
+            if (response) {
+                setCharactersFound(response.charactersFound);
+                if (response.success) {
+                    setSelectionResponse({
+                        message: `Well done! You found ${characterName}!`,
+                        success: true,
+                        element: null,
                     });
-                    setSuccessfulClicks([
-                        ...successfulClicks,
-                        [
-                            selectionResult.position,
-                            selectionResult.width,
-                            selectionResult.height,
-                        ]
-                    ]);
-                    if (charactersNew.length === 0) {
-                        const duration = fetchAPI.getGameDuration();
-                        setGameState("ended");
-                        setGameDuration(duration);
-                        setSelectionResponse({
-                            message: "",
-                            success: false,
-                            element: null,
-                        })
-                    } else {
-                        setSelectionResponse({
-                            message: `Well done! You found ${characterName}!`,
-                            success: true,
-                            element: null,
-                        });
-                    }
                 } else {
                     setSelectionResponse({
                         message: `Back luck... ${characterName} isn't there!`,
@@ -104,8 +83,7 @@ const Game = () => {
                 }
             }
             setSelecting(false);
-        }
-        getSelectionResult();
+        })();
     }
 
     const submitHighScore = useCallback(async (e) => {
@@ -125,19 +103,58 @@ const Game = () => {
             return;
         }
 
-        await fetchAPI.postHighScoreSubmission();
-
-        resetGame();
+        const status = await fetchAPI.postHighScoreSubmission();
+        if (status) {
+            resetGame();
+        } else {
+            setHighScoreSubmissionErrors(["Something went wrong. Please try again."]);
+        }
     }, []);
 
-    const startGameButton = (text) => {
+    const isCharacterFound = (characterId) => {
+        for (let i = 0; i < charactersFound.length; i++) {
+            if (charactersFound[i].id === characterId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const isGameFinished = () => {
+        for (let i = 0; i < gameInfo.characters.length; i++) {
+            if (
+                charactersFound.filter(
+                    (c) =>
+                        c.id ===
+                        gameInfo.characters[i].id.toString()
+                ).length === 0
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const setGameEndedState = () => {
+        const duration = fetchAPI.getGameDuration();
+        setGameState("ended");
+        setGameDuration(duration);
+        setSelectionResponse({
+            message: "",
+            success: false,
+            element: null,
+        });
+    }
+    if (gameState === "started" && isGameFinished()) setGameEndedState();
+
+    const startGameButton = (text, restarting) => {
         return (
             <button
                 className={styles["start-game-button"]}
                 onClick={(e) => {
                     e.target.blur();
                     e.preventDefault();
-                    startGame();
+                    startGame(restarting);
                 }}
                 onMouseLeave={(e) => {
                     e.currentTarget.blur();
@@ -197,7 +214,7 @@ const Game = () => {
                 }}
             >
                 {gameState === "waiting"
-                ?   startGameButton("Start Game")
+                ?   startGameButton("Start Game", false)
                 :   null}
                 {gameState === "started" || gameState === "ended"
                 ?   <>
@@ -211,21 +228,21 @@ const Game = () => {
                             height: `100%`,
                         }}
                     ></img>
-                    {successfulClicks.map((click, i) => {
+                    {charactersFound.map((c, i) => {
                         return (
                             <div
                                 className={styles["successful-click-area"]}
-                                key={i}
+                                key={c.id}
                                 aria-label="successful-click-area"
                                 style={{
                                     pointerEvents: "none",
 
                                     position: "absolute",
-                                    left: `${Math.max(Math.min(click[0][0] - (click[1] / 2), gameInfo.imageSize[0] - click[1]), 0)}px`,
-                                    top: `${Math.max(Math.min(click[0][1] - (click[2] / 2), gameInfo.imageSize[1] - click[2]), 0)}px`,
+                                    left: `${Math.max(Math.min(c.position[0] - (c.width / 2), gameInfo.imageSize[0] - c.width), 0)}px`,
+                                    top: `${Math.max(Math.min(c.position[1] - (c.height / 2), gameInfo.imageSize[1] - c.height), 0)}px`,
                                     
-                                    width: `${click[1]}px`,
-                                    height: `${click[2]}px`,
+                                    width: `${c.width}px`,
+                                    height: `${c.height}px`,
                                 }}
                             ></div>
                         );
@@ -252,6 +269,7 @@ const Game = () => {
                                 }}
                             >
                                 {gameInfo.characters.map((character, i) => {
+                                    if (isCharacterFound(character.id)) return null;
                                     return(
                                         <li
                                             className={styles["character-selection-option"]}
@@ -296,7 +314,7 @@ const Game = () => {
                                 aria-label="game-duration"
                             >Your final time was: {gameDuration}</h3>
                         :   null}
-                        {startGameButton("Play Again")}
+                        {startGameButton("Play Again", true)}
                         {submitToHighScoresButton()}
                         </div>
                     :   <div className={styles["high-score-form"]}>
@@ -317,6 +335,7 @@ const Game = () => {
                 >Characters Remaining</h3>
                 <ul className={styles["characters-remaining-list"]}>
                     {gameInfo.characters.map((character, i) => {
+                        if (isCharacterFound(character.id)) return null;
                         return (
                             <li
                                 className={styles["character-remaining"]}
