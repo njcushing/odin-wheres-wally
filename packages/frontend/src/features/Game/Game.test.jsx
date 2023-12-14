@@ -87,6 +87,15 @@ vi.mock('@/components/MaterialSymbolsButton', () => ({
     }
 }));
 
+vi.mock('./components/TimeCounter', () => ({ 
+    default: ({
+        startTime,
+        counting,
+    }) => {
+        return (<></>);
+    }
+}));
+
 const image = null;
 const imageSize = [800, 800];
 const characters = [

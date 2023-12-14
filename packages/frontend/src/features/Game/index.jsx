@@ -8,6 +8,7 @@ import convertTimeMillisecondsToHours from "@/utils/convertTimeMillisecondsToHou
 
 import NavigationButton from "@/features/NavBar/components/NavigationButton";
 import HighScoreForm from "./components/HighScoreForm";
+import TimeCounter from "./components/TimeCounter";
 
 const Game = () => {
     const [gameState, setGameState] = useState("waiting");
@@ -51,10 +52,7 @@ const Game = () => {
             setGameInfo(newInfo.gameInfo);
             resetGame();
             setCharactersFound(newInfo.charactersFound);
-
-            const time = convertTimeMillisecondsToHours(newInfo.timeTaken);
-            setGameDuration(`${time.hours}:${time.minutes}:${time.seconds}.${time.milliseconds}`);
-
+            setGameDuration(newInfo.timeTaken);
             setGameState("started");
         }
         getGameInfo();
@@ -80,8 +78,7 @@ const Game = () => {
                         success: true,
                         element: null,
                     });
-                    const time = convertTimeMillisecondsToHours(response.timeTaken);
-                    setGameDuration(`${time.hours}:${time.minutes}:${time.seconds}.${time.milliseconds}`);
+                    setGameDuration(response.timeTaken);
                 } else {
                     setSelectionResponse({
                         message: `Back luck... ${characterName} isn't there!`,
@@ -217,6 +214,11 @@ const Game = () => {
         });
     }
 
+    const convertGameDurationToString = () => {
+        const time = convertTimeMillisecondsToHours(gameDuration);
+        return `${time.hours}:${time.minutes}:${time.seconds}.${time.milliseconds}`;
+    }
+
     return (
         <div className={styles["wrapper"]}>
         <div className={styles["container"]}>
@@ -311,7 +313,17 @@ const Game = () => {
                     </>
                 :   null}
                 {gameState === "started"
-                ?   selectionResponse.element
+                ?   <>
+                    {selectionResponse.element}
+                    <div className={styles["time-counter-wrapper"]}>
+                    <div className={styles["time-counter"]}>
+                        <TimeCounter
+                            startTime={Number.parseInt(gameDuration)}
+                            counting={true}
+                        />
+                    </div>
+                    </div>
+                    </>
                 :   null}
                 {gameState === "ended"
                 ?   <div className={styles["game-ended-display"]}>
@@ -328,7 +340,7 @@ const Game = () => {
                         ?   <h3
                                 className={styles["game-duration"]}
                                 aria-label="game-duration"
-                            >Your final time was: {gameDuration}</h3>
+                            >Your final time was: {convertGameDurationToString()}</h3>
                         :   null}
                         {startGameButton("Play Again", true)}
                         {submitToHighScoresButton()}

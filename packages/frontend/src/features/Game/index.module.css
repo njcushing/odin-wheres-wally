@@ -191,22 +191,17 @@
     animation: 2.4s ease-in-out 0.15s 1 normal forwards fade-in-out;
 }
 
-.high-score-submission-message {
+.time-counter-wrapper {
     position: absolute;
 
-    align-self: start;
+    display: flex;
+    justify-content: start;
 
-    color: rgba(23, 194, 1, 0.92);
-    font-size: 1.7rem;
-    font-family: Gabarito;
-    text-align: center;
+    width: 100%;
+}
 
-    padding: 0.4rem 1.0rem;
-    margin: 0rem;
-
-    opacity: 0%;
-    transform: translateY(0.5rem);
-    animation: 2.4s ease-in-out 0.15s 1 normal forwards fade-in-out;
+.time-counter {
+    padding: 0.5rem;
 }
 
 .game-ended-display {
@@ -263,6 +258,24 @@
     opacity: 0%;
     transform: translateY(0.5rem);
     animation: 0.3s ease-in-out 0.15s 1 normal forwards fade-in;
+}
+
+.high-score-submission-message {
+    position: absolute;
+
+    align-self: start;
+
+    color: rgba(23, 194, 1, 0.92);
+    font-size: 1.7rem;
+    font-family: Gabarito;
+    text-align: center;
+
+    padding: 0.4rem 1.0rem;
+    margin: 0rem;
+
+    opacity: 0%;
+    transform: translateY(0.5rem);
+    animation: 2.4s ease-in-out 0.15s 1 normal forwards fade-in-out;
 }
 
 .characters-remaining-container {
