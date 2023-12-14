@@ -1,0 +1,27 @@
+.wrapper {
+    container-type: inline-size;
+
+    min-width: 16rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    
+    background-color: rgb(22, 22, 22);
+    border-radius: 0.5rem;
+
+    width: auto;
+    padding: 1.0rem;
+}
+
+.elapsed-time {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.6rem;
+    font-family: Gabarito;
+    text-align: left;
+
+    padding: 0rem;
+    margin: 0rem;
+}
