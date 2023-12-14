@@ -135,12 +135,16 @@ const getGameInformation = vi.fn(() => {
 const postCharacterSelection = vi.fn(() => {
     return { ...characterSelectionResponse };
 });
+const postHighScoreSubmission = vi.fn(() => {
+    return true;
+});
 vi.mock('./utils/fetchAPI', async () => {
     const actual = await vi.importActual("./utils/fetchAPI");
     return {
         ...actual,
         getGameInformation: () => getGameInformation(),
         postCharacterSelection: () => postCharacterSelection(),
+        postHighScoreSubmission: () => postHighScoreSubmission(),
     }
 });
 
