@@ -91,7 +91,7 @@ export const postHighScoreSubmission = async (firstName, lastName) => {
         last_name: lastName,
     };
 
-    return await fetch(
+    const response = await fetch(
         `${
             import.meta.env.VITE_SERVER_DOMAIN
         }/game/6572fc2d12becab50ff4f90f/high-scores`,
@@ -99,6 +99,7 @@ export const postHighScoreSubmission = async (firstName, lastName) => {
             method: "POST",
             mode: "cors",
             headers: {
+                authorization: localStorage.getItem("authToken"),
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(body),
@@ -111,8 +112,13 @@ export const postHighScoreSubmission = async (firstName, lastName) => {
                 return response.json();
             }
         })
-        .then((response) => response.data)
+        .then((response) => {
+            localStorage.removeItem("authToken");
+            return response;
+        })
         .catch((error) => {
             throw new Error(error);
         });
+    if (response) return true;
+    return false;
 };

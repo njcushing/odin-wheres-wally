@@ -26,6 +26,7 @@ const Game = () => {
     });
     const [submittingHighScore, setSubmittingHighScore] = useState(false);
     const [highScoreSubmissionErrors, setHighScoreSubmissionErrors] = useState([]);
+    const [highScoreSubmissionMessage, setHighScoreSubmissionMessage] = useState(null);
 
     const boxSizePx = [72, 72];
 
@@ -92,7 +93,6 @@ const Game = () => {
     
         const formData = new FormData(e.target.form);
         const formFields = Object.fromEntries(formData);
-        const formDataJSON = JSON.stringify(formFields);
 
         // Client-side validation
         const errors = [];
@@ -103,9 +103,20 @@ const Game = () => {
             return;
         }
 
-        const status = await fetchAPI.postHighScoreSubmission();
+        const status = await fetchAPI.postHighScoreSubmission(
+            formFields.first_name,
+            formFields.last_name
+        );
         if (status) {
             resetGame();
+            setHighScoreSubmissionMessage(
+                <h3
+                key={uuidv4()}
+                    className={styles["high-score-submission-message"]}
+                    aria-label="high-score-submission-message"
+                    onAnimationEnd={() => { setHighScoreSubmissionMessage(null); }}
+                >Your time was submitted!</h3>
+            )
         } else {
             setHighScoreSubmissionErrors(["Something went wrong. Please try again."]);
         }
@@ -327,6 +338,7 @@ const Game = () => {
                     }
                     </div>
                 :   null}
+                {highScoreSubmissionMessage}
             </div>
             <div className={styles["characters-remaining-container"]}>
                 <h3

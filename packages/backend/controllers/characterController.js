@@ -158,7 +158,7 @@ export const characterCheckPosition = [
                 "jwt",
                 { session: false },
                 (err, payload, options) => {
-                    const token = checkTokenState(
+                    const [token, fresh] = checkTokenState(
                         typeof payload === "object" ? payload.token : {},
                         gameId
                     );
@@ -185,6 +185,24 @@ export const characterCheckPosition = [
                             height: charInfo.height,
                         });
                         success = true;
+                    }
+
+                    // Check if game has been won
+                    let finished = true;
+                    for (let i = 0; i < game.characters.length; i++) {
+                        if (
+                            token.charactersFound.filter(
+                                (c) =>
+                                    c.id ===
+                                    game.characters[i].character._id.toString()
+                            ).length === 0
+                        ) {
+                            finished = false;
+                            break;
+                        }
+                    }
+                    if (finished) {
+                        token.dateCompleted = Date.now();
                     }
 
                     const charactersFound = [...token.charactersFound];

@@ -56,7 +56,7 @@ export const gameGet = asyncHandler(async (req, res, next) => {
             "jwt",
             { session: false },
             (err, payload, options) => {
-                const token = checkTokenState(
+                const [token, fresh] = checkTokenState(
                     typeof payload === "object" ? payload.token : {},
                     gameId
                 );

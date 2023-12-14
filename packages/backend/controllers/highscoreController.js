@@ -2,9 +2,12 @@ import mongoose from "mongoose";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
 import createError from "http-errors";
+import passport from "passport";
 
 import Game from "../models/game.js";
 import HighScore from "../models/highscore.js";
+
+import checkTokenState from "../utils/checkTokenState.js";
 
 const validateGameId = (next, gameId) => {
     if (!mongoose.Types.ObjectId.isValid(gameId)) {
@@ -42,14 +45,6 @@ const validateMandatoryFields = [
         .trim()
         .isLength({ min: 1 })
         .escape(),
-    body("time")
-        .exists()
-        .not()
-        .isEmpty()
-        .withMessage("'time' field (float) must not be empty")
-        .isFloat({ min: 0 })
-        .toFloat()
-        .withMessage("'time' field (float) must not be less than 0"),
 ];
 
 export const highscoreGet = asyncHandler(async (req, res, next) => {
@@ -84,33 +79,86 @@ export const highscorePost = [
             );
         }
 
-        const newHighscoreId = new mongoose.Types.ObjectId();
-        const highscore = new HighScore({
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            time: req.body.time,
-            date_achieved: Date.now(),
-            _id: newHighscoreId,
-        });
+        // Create new/extract existing token
+        passport.authenticate(
+            "jwt",
+            { session: false },
+            async (err, payload, options) => {
+                const [token, fresh] = checkTokenState(
+                    typeof payload === "object" ? payload.token : {},
+                    gameId
+                );
 
-        const updatedGame = await Game.findByIdAndUpdate(gameId, {
-            $push: { highscores: newHighscoreId },
-        });
-        if (updatedGame === null) {
-            return next(
-                createError(
-                    404,
-                    `Specified game not found at: ${gameId}. High-Score was not submitted`
-                )
-            );
-        } else {
-            await highscore.save();
-            return successfulRequest(
-                res,
-                201,
-                `High-Score submitted`,
-                highscore
-            );
-        }
+                if (fresh) {
+                    return next(createError(401, `Invalid auth token.`));
+                }
+
+                // Check if game is won
+                for (let i = 0; i < game.characters.length; i++) {
+                    if (
+                        token.charactersFound.filter(
+                            (c) =>
+                                c.id === game.characters[i].character.toString()
+                        ).length === 0
+                    ) {
+                        return next(
+                            createError(400, `The game has not yet been won.`)
+                        );
+                    }
+                }
+
+                // Check if high-score with id from token already exists
+                const existingHighScore = await HighScore.findById(
+                    token.id
+                ).exec();
+                if (existingHighScore !== null) {
+                    return next(
+                        createError(
+                            400,
+                            `You have already submitted this high-score.`
+                        )
+                    );
+                }
+
+                // Get total game time
+                if (
+                    isNaN(new Date(token.dateStarted)) ||
+                    isNaN(new Date(token.dateCompleted))
+                ) {
+                    return next(createError(400, `Invalid completion time.`));
+                }
+                const gameTime =
+                    new Date(token.dateCompleted).getTime() -
+                    new Date(token.dateStarted).getTime();
+
+                // Submit high-score
+                const highscore = new HighScore({
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    time: gameTime,
+                    date_achieved: Date.now(),
+                    _id: token.id,
+                });
+                const updatedGame = await Game.findByIdAndUpdate(gameId, {
+                    $push: { highscores: token.id },
+                });
+                if (updatedGame === null) {
+                    return next(
+                        createError(
+                            404,
+                            `Specified game not found at: ${gameId}. High-Score was not submitted`
+                        )
+                    );
+                } else {
+                    await highscore.save();
+                    return successfulRequest(
+                        res,
+                        201,
+                        `High-Score submitted`,
+                        highscore
+                    );
+                }
+            }
+        )(req, res, next);
     }),
 ];
