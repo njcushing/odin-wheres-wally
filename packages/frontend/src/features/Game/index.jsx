@@ -336,7 +336,7 @@ const Game = () => {
                             className={styles["congratulations-message"]}
                             aria-label="congratulations-message"
                         >Congratulations!</h1>
-                        {gameDuration
+                        {gameDuration !== null
                         ?   <h3
                                 className={styles["game-duration"]}
                                 aria-label="game-duration"

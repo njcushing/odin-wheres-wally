@@ -100,35 +100,40 @@ const image = null;
 const imageSize = [800, 800];
 const characters = [
     {
-        id: 1,
+        id: "1",
         name: "1",
         imageUrl: null
     },
     {
-        id: 2,
+        id: "2",
         name: "2",
         imageUrl: null
     },
     {
-        id: 3,
+        id: "3",
         name: "3",
         imageUrl: null
     }
 ];
-const getGameInformation = vi.fn(() => {
-    return {
-        image: image,
+const getGameInformationResponse = {
+    gameInfo: {
+        imageUrl: image,
         imageSize: imageSize,
         characters: characters,
-    }
+    },
+    charactersFound: [],
+    timeTaken: 0,
+}
+const characterSelectionResponse = {
+    success: true,
+    charactersFound: [],
+    timeTaken: 0,
+}
+const getGameInformation = vi.fn(() => {
+    return { ...getGameInformationResponse };
 })
-const postCharacterSelection = vi.fn((characterName, clickPosition) => {
-    return {
-        success: true,
-        position: [0, 0],
-        width: 0,
-        height: 0,
-    }
+const postCharacterSelection = vi.fn(() => {
+    return { ...characterSelectionResponse };
 });
 vi.mock('./utils/fetchAPI', async () => {
     const actual = await vi.importActual("./utils/fetchAPI");
@@ -158,6 +163,15 @@ describe("UI/DOM Testing...", () => {
         test(`Should NOT contain any characters that have been successfully
          selected`, async () => {
             const user = userEvent.setup();
+            postCharacterSelection.mockReturnValueOnce({
+                ...characterSelectionResponse,
+                charactersFound: [{
+                    id: "1",
+                    position: [0, 0],
+                    width: 0,
+                    height: 0,
+                }]
+            });
             await startGame(user);
             expect(screen.queryByText("1")).not.toBeNull();
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
@@ -321,6 +335,15 @@ describe("UI/DOM Testing...", () => {
         test(`Should not contain any characters that have been successfully
         selected`, async () => {
             const user = userEvent.setup();
+            postCharacterSelection.mockReturnValueOnce({
+                ...characterSelectionResponse,
+                charactersFound: [{
+                    id: "1",
+                    position: [0, 0],
+                    width: 0,
+                    height: 0,
+                }]
+            });
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
             await user.click(gameImage);
@@ -335,6 +358,15 @@ describe("UI/DOM Testing...", () => {
     describe("A 'successful click area'...", () => {
         test("Should be displayed for each character found", async () => {
             const user = userEvent.setup();
+            postCharacterSelection.mockReturnValueOnce({
+                ...characterSelectionResponse,
+                charactersFound: [{
+                    id: "1",
+                    position: [0, 0],
+                    width: 0,
+                    height: 0,
+                }]
+            });
             await startGame(user);
             let successfulClickAreas = screen.queryAllByRole("generic", { name: "successful-click-area" });
             expect(successfulClickAreas.length).toBe(0);
@@ -365,9 +397,24 @@ describe("UI/DOM Testing...", () => {
         test("Should be displayed when the last character is selected", async () => {
             const user = userEvent.setup();
             getGameInformation.mockReturnValueOnce({
-                image: image,
-                imageSize: imageSize,
-                characters: ["1"],
+                ...getGameInformationResponse,
+                gameInfo: {
+                    ...getGameInformationResponse.gameInfo,
+                    characters: [{
+                        id: "1",
+                        name: "1",
+                        imageUrl: null
+                    }],
+                }
+            });
+            postCharacterSelection.mockReturnValueOnce({
+                ...characterSelectionResponse,
+                charactersFound: [{
+                    id: "1",
+                    position: [0, 0],
+                    width: 0,
+                    height: 0,
+                }]
             });
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
@@ -384,9 +431,24 @@ describe("UI/DOM Testing...", () => {
         test("Should be displayed when the game is won", async () => {
             const user = userEvent.setup();
             getGameInformation.mockReturnValueOnce({
-                image: image,
-                imageSize: imageSize,
-                characters: ["1"],
+                ...getGameInformationResponse,
+                gameInfo: {
+                    ...getGameInformationResponse.gameInfo,
+                    characters: [{
+                        id: "1",
+                        name: "1",
+                        imageUrl: null
+                    }],
+                }
+            });
+            postCharacterSelection.mockReturnValueOnce({
+                ...characterSelectionResponse,
+                charactersFound: [{
+                    id: "1",
+                    position: [0, 0],
+                    width: 0,
+                    height: 0,
+                }],
             });
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
@@ -403,9 +465,24 @@ describe("UI/DOM Testing...", () => {
         test("Should be displayed when the game is won", async () => {
             const user = userEvent.setup();
             getGameInformation.mockReturnValueOnce({
-                image: image,
-                imageSize: imageSize,
-                characters: ["1"],
+                ...getGameInformationResponse,
+                gameInfo: {
+                    ...getGameInformationResponse.gameInfo,
+                    characters: [{
+                        id: "1",
+                        name: "1",
+                        imageUrl: null
+                    }],
+                }
+            });
+            postCharacterSelection.mockReturnValueOnce({
+                ...characterSelectionResponse,
+                charactersFound: [{
+                    id: "1",
+                    position: [0, 0],
+                    width: 0,
+                    height: 0,
+                }]
             });
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
@@ -420,9 +497,24 @@ describe("UI/DOM Testing...", () => {
         test("Should display the HighScoreForm component when clicked", async () => {
             const user = userEvent.setup();
             getGameInformation.mockReturnValueOnce({
-                image: image,
-                imageSize: imageSize,
-                characters: ["1"],
+                ...getGameInformationResponse,
+                gameInfo: {
+                    ...getGameInformationResponse.gameInfo,
+                    characters: [{
+                        id: "1",
+                        name: "1",
+                        imageUrl: null
+                    }],
+                }
+            });
+            postCharacterSelection.mockReturnValueOnce({
+                ...characterSelectionResponse,
+                charactersFound: [{
+                    id: "1",
+                    position: [0, 0],
+                    width: 0,
+                    height: 0,
+                }]
             });
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
@@ -440,9 +532,24 @@ describe("UI/DOM Testing...", () => {
          postHighScoreSubmission function`, async () => {
             const user = userEvent.setup();
             getGameInformation.mockReturnValueOnce({
-                image: image,
-                imageSize: imageSize,
-                characters: ["1"],
+                ...getGameInformationResponse,
+                gameInfo: {
+                    ...getGameInformationResponse.gameInfo,
+                    characters: [{
+                        id: "1",
+                        name: "1",
+                        imageUrl: null
+                    }],
+                }
+            });
+            postCharacterSelection.mockReturnValueOnce({
+                ...characterSelectionResponse,
+                charactersFound: [{
+                    id: "1",
+                    position: [0, 0],
+                    width: 0,
+                    height: 0,
+                }]
             });
             await startGame(user);
             const gameImage = screen.getByRole("img", { name: "Image containing the characters to locate." });
