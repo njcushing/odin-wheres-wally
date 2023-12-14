@@ -10,6 +10,7 @@
         "startclient": "vite ./packages/frontend",
         "buildclient": "vite build ./packages/frontend",
         "testclient": "vitest watch --root ./packages/frontend",
+        "coverage": "vitest run --root ./packages/frontend --coverage",
         "startserver": "node ./packages/backend/bin/www.js",
         "startserverdev": "nodemon ./packages/backend/bin/www.js"
     },
