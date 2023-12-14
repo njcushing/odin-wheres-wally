@@ -5,15 +5,20 @@ const convertTimeMillisecondsToHours = (milliseconds) => {
     hours = hours < 10 ? `0${hours}` : hours;
     minutes = minutes - hours * 60;
     minutes = minutes < 10 ? `0${minutes}` : minutes;
-    seconds = seconds - minutes * 60;
+    seconds = seconds - minutes * 60 - hours * (60 * 60);
     seconds = seconds < 10 ? `0${seconds}` : seconds;
-    milliseconds = milliseconds - seconds * 1000;
+    milliseconds =
+        milliseconds -
+        seconds * 1000 -
+        minutes * (1000 * 60) -
+        hours * (1000 * 60 * 60);
     milliseconds =
         milliseconds < 100
             ? milliseconds < 10
                 ? `00${milliseconds}`
                 : `0${milliseconds}`
             : milliseconds;
+
     return {
         hours: hours,
         minutes: minutes,
