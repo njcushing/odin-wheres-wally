@@ -121,21 +121,15 @@ export const highscorePost = [
                 }
 
                 // Get total game time
-                if (
-                    isNaN(new Date(token.dateStarted)) ||
-                    isNaN(new Date(token.dateCompleted))
-                ) {
+                if (Number.isNaN(Number.parseInt(token.timeTaken))) {
                     return next(createError(400, `Invalid completion time.`));
                 }
-                const gameTime =
-                    new Date(token.dateCompleted).getTime() -
-                    new Date(token.dateStarted).getTime();
 
                 // Submit high-score
                 const highscore = new HighScore({
                     first_name: req.body.first_name,
                     last_name: req.body.last_name,
-                    time: gameTime,
+                    time: token.timeTaken,
                     date_achieved: Date.now(),
                     _id: token.id,
                 });

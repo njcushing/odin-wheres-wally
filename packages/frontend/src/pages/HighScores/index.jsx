@@ -4,7 +4,7 @@ import styles from "./index.module.css";
 
 import { DateTime } from "luxon";
 import getHighScores from "./utils/getHighScores";
-import convertTimeSecondsToHours from "@/utils/convertTimeSecondsToHours";
+import convertTimeMillisecondsToHours from "@/utils/convertTimeMillisecondsToHours";
 
 import NavigationButton from "@/features/NavBar/components/NavigationButton";
 
@@ -46,7 +46,7 @@ const HighScores = () => {
                     if (i === 0) position = "-gold";
                     if (i === 1) position = "-silver";
                     if (i === 2) position = "-bronze";
-                    let time = convertTimeSecondsToHours(score.time);
+                    let time = convertTimeMillisecondsToHours(score.time);
                     return (
                         <li
                             className={styles[`high-score${position}`]}
@@ -56,7 +56,7 @@ const HighScores = () => {
                             <h2
                                 className={styles["high-score-information"]}
                                 aria-label="high-score-information"
-                            >{`${i + 1}: ${score.first_name} ${score.last_name} ${time.hours}:${time.minutes}:${time.seconds}`}</h2>
+                            >{`${i + 1}: ${score.first_name} ${score.last_name} ${time.hours}:${time.minutes}:${time.seconds}.${time.milliseconds}`}</h2>
                             <h3
                                 className={styles["high-score-date-achieved"]}
                             >Date achieved: {formatDate(score.date_achieved)}</h3>

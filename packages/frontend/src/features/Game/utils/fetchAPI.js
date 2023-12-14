@@ -1,5 +1,3 @@
-import convertTimeSecondsToHours from "@/utils/convertTimeSecondsToHours.js";
-
 export const getGameInformation = async (restarting) => {
     if (restarting) localStorage.removeItem("authToken");
 
@@ -36,6 +34,7 @@ export const getGameInformation = async (restarting) => {
                 characters: data.gameInfo.characters,
             },
             charactersFound: data.charactersFound,
+            timeTaken: data.timeTaken,
         };
     } else {
         return null;
@@ -75,14 +74,6 @@ export const postCharacterSelection = async (characterId, clickPosition) => {
         .catch((error) => {
             throw new Error(error);
         });
-};
-
-export const getGameDuration = () => {
-    const startDate = new Date("2023-12-07T14:43:11");
-    const endDate = new Date("2023-12-07T14:48:42");
-    let seconds = (endDate.getTime() - startDate.getTime()) / 1000;
-    const time = convertTimeSecondsToHours(seconds);
-    return `${time.hours}:${time.minutes}:${time.seconds}`;
 };
 
 export const postHighScoreSubmission = async (firstName, lastName) => {

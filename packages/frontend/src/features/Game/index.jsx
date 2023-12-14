@@ -4,6 +4,7 @@ import styles from "./index.module.css";
 import { v4 as uuidv4 } from "uuid";
 
 import * as fetchAPI from "./utils/fetchAPI.js";
+import convertTimeMillisecondsToHours from "@/utils/convertTimeMillisecondsToHours.js";
 
 import NavigationButton from "@/features/NavBar/components/NavigationButton";
 import HighScoreForm from "./components/HighScoreForm";
@@ -50,6 +51,10 @@ const Game = () => {
             setGameInfo(newInfo.gameInfo);
             resetGame();
             setCharactersFound(newInfo.charactersFound);
+
+            const time = convertTimeMillisecondsToHours(newInfo.timeTaken);
+            setGameDuration(`${time.hours}:${time.minutes}:${time.seconds}.${time.milliseconds}`);
+
             setGameState("started");
         }
         getGameInfo();
@@ -75,6 +80,8 @@ const Game = () => {
                         success: true,
                         element: null,
                     });
+                    const time = convertTimeMillisecondsToHours(response.timeTaken);
+                    setGameDuration(`${time.hours}:${time.minutes}:${time.seconds}.${time.milliseconds}`);
                 } else {
                     setSelectionResponse({
                         message: `Back luck... ${characterName} isn't there!`,
@@ -147,9 +154,7 @@ const Game = () => {
     }
 
     const setGameEndedState = () => {
-        const duration = fetchAPI.getGameDuration();
         setGameState("ended");
-        setGameDuration(duration);
         setSelectionResponse({
             message: "",
             success: false,

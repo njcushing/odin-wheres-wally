@@ -5,7 +5,7 @@ const checkTokenState = (extractedJWT, gameId) => {
     const token = {
         id: new mongoose.Types.ObjectId(),
         dateStarted: Date.now(),
-        dateCompleted: null,
+        timeTaken: null,
         gameId: gameId,
         charactersFound: [],
     };
@@ -14,12 +14,12 @@ const checkTokenState = (extractedJWT, gameId) => {
             Object.hasOwn(extractedJWT, "gameId") &&
             extractedJWT.gameId === gameId &&
             Object.hasOwn(extractedJWT, "dateStarted") &&
-            Object.hasOwn(extractedJWT, "dateCompleted") &&
+            Object.hasOwn(extractedJWT, "timeTaken") &&
             Object.hasOwn(extractedJWT, "id") &&
             Object.hasOwn(extractedJWT, "charactersFound")
         ) {
             token.dateStarted = extractedJWT.dateStarted;
-            token.dateCompleted = extractedJWT.dateCompleted;
+            token.timeTaken = extractedJWT.timeTaken;
             token.id = extractedJWT.id;
             token.charactersFound = extractedJWT.charactersFound;
             fresh = false;

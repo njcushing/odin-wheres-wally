@@ -201,8 +201,17 @@ export const characterCheckPosition = [
                             break;
                         }
                     }
-                    if (finished) {
-                        token.dateCompleted = Date.now();
+
+                    // Calculate time taken
+                    let timeTaken;
+                    if (!Number.isNaN(Number.parseInt(token.timeTaken))) {
+                        timeTaken = token.timeTaken;
+                    } else if (isNaN(new Date(token.dateStarted))) {
+                        return next(createError(400, `Invalid start time.`));
+                    } else {
+                        timeTaken =
+                            Date.now() - new Date(token.dateStarted).getTime();
+                        if (finished) token.timeTaken = timeTaken;
                     }
 
                     const charactersFound = [...token.charactersFound];
@@ -229,6 +238,7 @@ export const characterCheckPosition = [
                                         selectionResponse: {
                                             success: success,
                                             charactersFound: charactersFound,
+                                            timeTaken: timeTaken,
                                         },
                                         token: `Bearer ${token}`,
                                     }

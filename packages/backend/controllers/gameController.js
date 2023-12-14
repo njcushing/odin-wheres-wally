@@ -61,6 +61,17 @@ export const gameGet = asyncHandler(async (req, res, next) => {
                     gameId
                 );
 
+                // Calculate time taken
+                let timeTaken;
+                if (!Number.isNaN(Number.parseInt(token.timeTaken))) {
+                    timeTaken = token.timeTaken;
+                } else if (isNaN(new Date(token.dateStarted))) {
+                    return next(createError(400, `Invalid start time.`));
+                } else {
+                    timeTaken =
+                        Date.now() - new Date(token.dateStarted).getTime();
+                }
+
                 const charactersFound = [...token.charactersFound];
 
                 jwt.sign(
@@ -78,6 +89,7 @@ export const gameGet = asyncHandler(async (req, res, next) => {
                             return successfulRequest(res, 200, "Game found", {
                                 gameInfo: gameTrimmed,
                                 charactersFound: charactersFound,
+                                timeTaken: timeTaken,
                                 token: `Bearer ${token}`,
                             });
                         }
