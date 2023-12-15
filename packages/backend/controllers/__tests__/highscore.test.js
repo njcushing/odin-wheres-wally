@@ -11,6 +11,7 @@ import highscore from "../../routes/highscore.js";
 import mongoose from "mongoose";
 import initialiseMongoServer from "../../utils/dbConfigTesting.js";
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/", highscore);
 
@@ -28,9 +29,30 @@ passport.use(
     )
 );
 
-let games, characters, highscores;
+const checkTokenState = vi.fn(() => {
+    return [
+        {
+            id: new mongoose.Types.ObjectId(),
+            dateStarted: Date.now(),
+            timeTaken: null,
+            gameId: games[0]._id,
+            charactersFound: [],
+        },
+        true,
+    ];
+});
+vi.mock("../../utils/checkTokenState", async () => ({
+    default: () => checkTokenState(),
+}));
+
+const checkGameWon = vi.fn(() => false);
+vi.mock("../../utils/checkGameWon", async () => ({
+    default: () => checkGameWon(),
+}));
+
+let games, highscores, characters;
 beforeAll(async () => {
-    [games, characters, highscores] = await initialiseMongoServer();
+    [games, highscores, characters] = await initialiseMongoServer();
 });
 
 afterAll(() => {
@@ -78,6 +100,120 @@ describe("Route testing...", () => {
                         );
                     }
                 });
+        });
+    });
+    describe("/game/:gameId/high-scores POST route...", () => {
+        test(`Should return status code 400 if provided gameId is not a valid
+         MongoDB ObjectId`, async () => {
+            const gameId = null;
+            await request(app).post(`/${gameId}/high-scores`).expect(400);
+        });
+        test(`Should return status code 404 if provided gameId is a valid
+         MongoDB ObjectId, but the document is not found in the database`, async () => {
+            const gameId = new mongoose.Types.ObjectId();
+            await request(app).post(`/${gameId}/high-scores`).expect(404);
+        });
+        test(`Should return status code 400 if the specified game is found in
+         the database, but the body object in the request object does not
+         contain the necessary information`, async () => {
+            const gameId = games[0]._id;
+            await request(app)
+                .post(`/${gameId}/high-scores`)
+                .send()
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+                .expect(400);
+        });
+        test(`Should return status code 401 if no valid auth token is provided`, async () => {
+            const gameId = games[0]._id;
+            await request(app)
+                .post(`/${gameId}/high-scores`)
+                .send({ first_name: "John", last_name: "Smith" })
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+                .expect(401);
+        });
+        test(`Should return status code 400 if game is not yet won`, async () => {
+            const gameId = games[0]._id;
+            checkTokenState.mockReturnValueOnce([
+                {
+                    id: new mongoose.Types.ObjectId(),
+                    dateStarted: Date.now(),
+                    timeTaken: null,
+                    gameId: games[0]._id,
+                    charactersFound: [],
+                },
+                false, // Mocking valid token
+            ]);
+            await request(app)
+                .post(`/${gameId}/high-scores`)
+                .send({ first_name: "John", last_name: "Smith" })
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+                .expect(400);
+        });
+        test(`Should return status code 400 if provided id in token matches an
+         existing high-score within the database`, async () => {
+            const gameId = games[0]._id;
+            checkTokenState.mockReturnValueOnce([
+                {
+                    id: highscores[0]._id, // Mocking existing high-score in database
+                    dateStarted: Date.now(),
+                    timeTaken: null,
+                    gameId: games[0]._id,
+                    charactersFound: [],
+                },
+                false, // Mocking valid token
+            ]);
+            checkGameWon.mockReturnValueOnce(true); // Mocking game being won
+            await request(app)
+                .post(`/${gameId}/high-scores`)
+                .send({ first_name: "John", last_name: "Smith" })
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+                .expect(400);
+        });
+        test(`Should return status code 400 if provided timeTaken value in token
+         is not a valid numeric value`, async () => {
+            const gameId = games[0]._id;
+            checkTokenState.mockReturnValueOnce([
+                {
+                    id: new mongoose.Types.ObjectId(),
+                    dateStarted: Date.now(),
+                    timeTaken: null,
+                    gameId: games[0]._id,
+                    charactersFound: [],
+                },
+                false, // Mocking valid token
+            ]);
+            checkGameWon.mockReturnValueOnce(true); // Mocking game being won
+            await request(app)
+                .post(`/${gameId}/high-scores`)
+                .send({ first_name: "John", last_name: "Smith" })
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+                .expect(400);
+        });
+        test(`Should return status code 201 if the high-score is successfully
+         submitted to the database`, async () => {
+            const gameId = games[0]._id;
+            checkTokenState.mockReturnValueOnce([
+                {
+                    id: new mongoose.Types.ObjectId(),
+                    dateStarted: Date.now(),
+                    timeTaken: 1000,
+                    gameId: games[0]._id,
+                    charactersFound: [],
+                },
+                false, // Mocking valid token
+            ]);
+            checkGameWon.mockReturnValueOnce(true); // Mocking game being won
+            await request(app)
+                .post(`/${gameId}/high-scores`)
+                .send({ first_name: "John", last_name: "Smith" })
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+                .expect(201);
         });
     });
 });
