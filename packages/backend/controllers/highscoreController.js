@@ -7,6 +7,7 @@ import passport from "passport";
 import Game from "../models/game.js";
 import HighScore from "../models/highscore.js";
 
+import successfulRequest from "../utils/successfulRequest.js";
 import checkTokenState from "../utils/checkTokenState.js";
 
 const validateGameId = (next, gameId) => {
@@ -26,14 +27,6 @@ const compileValidationErrors = (errorsArray) => {
 
 const gameNotFound = (gameId) => {
     return createError(404, `Specified game not found at: ${gameId}.`);
-};
-
-const successfulRequest = (res, status, message, data) => {
-    return res.status(status).send({
-        status: status,
-        message: message,
-        data: data,
-    });
 };
 
 const validateMandatoryFields = [

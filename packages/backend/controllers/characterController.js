@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import Game from "../models/game.js";
 import Character from "../models/character.js";
 
+import successfulRequest from "../utils/successfulRequest.js";
 import checkTokenState from "../utils/checkTokenState.js";
 
 export const validateDocumentIds = (next, gameId, characterId) => {
@@ -47,14 +48,6 @@ const characterNotFound = (characterId) => {
         404,
         `Specified character not found at: ${characterId}.`
     );
-};
-
-const successfulRequest = (res, status, message, data) => {
-    return res.status(status).send({
-        status: status,
-        message: message,
-        data: data,
-    });
 };
 
 const validateMandatoryFields = [
