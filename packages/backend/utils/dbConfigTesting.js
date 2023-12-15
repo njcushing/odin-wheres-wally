@@ -147,17 +147,17 @@ const initialiseMongoServer = async () => {
                     },
                 ],
                 [
-                    highscores[0],
-                    highscores[1],
-                    highscores[2],
-                    highscores[3],
-                    highscores[4],
+                    highscores[0]._id,
+                    highscores[1]._id,
+                    highscores[2]._id,
+                    highscores[3]._id,
+                    highscores[4]._id,
                 ]
             ),
         ]);
     }
 
-    return [games, characters];
+    return [games, highscores, characters];
 };
 
 export default initialiseMongoServer;
