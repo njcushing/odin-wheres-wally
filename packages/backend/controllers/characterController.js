@@ -9,6 +9,7 @@ import Game from "../models/game.js";
 import Character from "../models/character.js";
 
 import successfulRequest from "../utils/successfulRequest.js";
+import isCharacterInScene from "../utils/isCharacterInScene.js";
 import checkTokenState from "../utils/checkTokenState.js";
 import checkGameWon from "../utils/checkGameWon.js";
 
@@ -83,19 +84,11 @@ export const characterCheckPosition = [
         if (game === null) return next(gameNotFound(gameId));
         if (character === null) return next(characterNotFound(characterId));
 
-        let characterInScene = false;
-        let charInfo;
-        for (let i = 0; i < game.characters.length; i++) {
-            if (game.characters[i].character._id.toString() === characterId) {
-                characterInScene = true;
-                charInfo = { ...game.characters[i]._doc };
-                continue;
-            }
-        }
-        if (!characterInScene) {
+        const charInfo = isCharacterInScene(game, character);
+        if (!charInfo) {
             return createError(
                 404,
-                `Specified character exists at: ${characterId}, but it is not
+                `Specified character exists at: ${character._id}, but it is not
                 present in the current scene.`
             );
         }
