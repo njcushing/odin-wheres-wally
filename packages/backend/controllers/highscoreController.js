@@ -53,7 +53,9 @@ export const highscoreGet = asyncHandler(async (req, res, next) => {
         })
         .exec();
     if (game === null) return next(gameNotFound(gameId));
-    return successfulRequest(res, 200, "High-Score(s) found", game.highscores);
+    return successfulRequest(res, 200, "High-Score(s) found", {
+        highscores: game.highscores,
+    });
 });
 
 export const highscorePost = [

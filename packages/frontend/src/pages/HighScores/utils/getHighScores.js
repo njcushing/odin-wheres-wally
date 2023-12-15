@@ -1,5 +1,5 @@
 const getHighScores = async () => {
-    const highScores = await fetch(
+    const response = await fetch(
         `${
             import.meta.env.VITE_SERVER_DOMAIN
         }/game/6572fc2d12becab50ff4f90f/high-scores`,
@@ -19,8 +19,8 @@ const getHighScores = async () => {
         .catch((error) => {
             throw new Error(error);
         });
-    if (highScores) {
-        return highScores;
+    if (response) {
+        return response.highscores;
     } else {
         return [];
     }
