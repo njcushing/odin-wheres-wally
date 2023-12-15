@@ -9,6 +9,7 @@ import HighScore from "../models/highscore.js";
 
 import successfulRequest from "../utils/successfulRequest.js";
 import checkTokenState from "../utils/checkTokenState.js";
+import checkGameWon from "../utils/checkGameWon.js";
 
 const validateGameId = (next, gameId) => {
     if (!mongoose.Types.ObjectId.isValid(gameId)) {
@@ -89,17 +90,10 @@ export const highscorePost = [
                 }
 
                 // Check if game is won
-                for (let i = 0; i < game.characters.length; i++) {
-                    if (
-                        token.charactersFound.filter(
-                            (c) =>
-                                c.id === game.characters[i].character.toString()
-                        ).length === 0
-                    ) {
-                        return next(
-                            createError(400, `The game has not yet been won.`)
-                        );
-                    }
+                if (!checkGameWon(game, token)) {
+                    return next(
+                        createError(400, `The game has not yet been won.`)
+                    );
                 }
 
                 // Check if high-score with id from token already exists

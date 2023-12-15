@@ -10,6 +10,7 @@ import Character from "../models/character.js";
 
 import successfulRequest from "../utils/successfulRequest.js";
 import checkTokenState from "../utils/checkTokenState.js";
+import checkGameWon from "../utils/checkGameWon.js";
 
 export const validateDocumentIds = (next, gameId, characterId) => {
     const validGameId = mongoose.Types.ObjectId.isValid(gameId);
@@ -180,20 +181,7 @@ export const characterCheckPosition = [
                         success = true;
                     }
 
-                    // Check if game has been won
-                    let finished = true;
-                    for (let i = 0; i < game.characters.length; i++) {
-                        if (
-                            token.charactersFound.filter(
-                                (c) =>
-                                    c.id ===
-                                    game.characters[i].character._id.toString()
-                            ).length === 0
-                        ) {
-                            finished = false;
-                            break;
-                        }
-                    }
+                    const finished = checkGameWon(game, token);
 
                     // Calculate time taken
                     let timeTaken;
