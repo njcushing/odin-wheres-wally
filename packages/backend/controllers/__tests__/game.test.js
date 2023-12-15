@@ -11,6 +11,7 @@ import game from "../../routes/game.js";
 import mongoose from "mongoose";
 import initialiseMongoServer from "../../utils/dbConfigTesting.js";
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/", game);
 
