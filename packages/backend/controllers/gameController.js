@@ -29,7 +29,7 @@ const successfulRequest = (res, status, message, data) => {
 
 export const gameGet = asyncHandler(async (req, res, next) => {
     const gameId = req.params.gameId;
-    if (!validateGameId(next, gameId)) return;
+    validateGameId(next, gameId);
     let game = await Game.findById(gameId)
         .populate({ path: "characters", populate: { path: "character" } })
         .exec();

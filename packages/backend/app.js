@@ -15,14 +15,8 @@ import RateLimit from "express-rate-limit";
 import helmet from "helmet";
 import compression from "compression";
 
-// Set up mongoose connection
-import mongoose from "mongoose";
-mongoose.set("strictQuery", false);
-const mongoDB = process.env.MONGO_URI || null;
-main().catch((err) => console.log(err));
-async function main() {
-    await mongoose.connect(mongoDB);
-}
+import dbConfig from "./utils/dbConfig.js";
+dbConfig();
 
 var app = express();
 
