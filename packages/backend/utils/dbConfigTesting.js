@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
 import Game from "../models/game.js";
+import HighScore from "../models/highscore.js";
 import Character from "../models/character.js";
 
 const initialiseMongoServer = async () => {
@@ -26,18 +27,36 @@ const initialiseMongoServer = async () => {
 
     // Populate database
     const games = [];
+    const highscores = [];
     const characters = [];
     await createCharacters();
+    await createHighScores();
     await createGames();
 
-    async function newCharacter(index, name, imageUrl, _id) {
+    async function newCharacter(index, name, imageUrl) {
         const character = new Character({
             name: name,
             imageUrl: imageUrl,
-            _id: _id,
         });
         await character.save();
         characters[index] = character;
+    }
+
+    async function newHighScore(
+        index,
+        firstName,
+        lastName,
+        time,
+        dateAchieved
+    ) {
+        const highscore = new HighScore({
+            first_name: firstName,
+            last_name: lastName,
+            time: time,
+            date_achieved: dateAchieved,
+        });
+        await highscore.save();
+        highscores[index] = highscore;
     }
 
     async function newGame(
@@ -45,13 +64,15 @@ const initialiseMongoServer = async () => {
         imageUrl,
         imageWidth,
         imageHeight,
-        characters
+        characters,
+        highscores
     ) {
         const game = new Game({
             imageUrl: imageUrl,
             imageWidth: imageWidth,
             imageHeight: imageHeight,
             characters: characters,
+            highscores: highscores,
         });
         await game.save();
         games[index] = game;
@@ -68,6 +89,16 @@ const initialiseMongoServer = async () => {
                 "src/assets/images/characters/wizard.png"
             ),
             newCharacter(4, "Odlaw", "src/assets/images/characters/odlaw.png"),
+        ]);
+    }
+
+    async function createHighScores() {
+        await Promise.all([
+            newHighScore(0, "John", "Smith", 200, Date.now()),
+            newHighScore(1, "Davey", "Jones", 418, Date.now()),
+            newHighScore(2, "William", "Turner", 140, Date.now()),
+            newHighScore(3, "Elizabeth", "Swann", 192, Date.now()),
+            newHighScore(4, "Jack", "Sparrow", 346, Date.now()),
         ]);
     }
 
@@ -114,6 +145,13 @@ const initialiseMongoServer = async () => {
                         width: 38,
                         height: 54,
                     },
+                ],
+                [
+                    highscores[0],
+                    highscores[1],
+                    highscores[2],
+                    highscores[3],
+                    highscores[4],
                 ]
             ),
         ]);
