@@ -21,7 +21,7 @@ const gameNotFound = (gameId) => {
 };
 
 export const gamesGet = asyncHandler(async (req, res, next) => {
-    let games = await Game.find().exec();
+    let games = await Game.find().select("name _id").exec();
     return successfulRequest(res, 200, "Game(s) found", {
         games: games,
     });
