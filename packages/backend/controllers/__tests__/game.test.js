@@ -40,6 +40,11 @@ afterAll(() => {
 
 describe("Route testing...", () => {
     describe("/game/:gameId GET route...", () => {
+        test(`Should return status code 200`, async () => {
+            await request(app).get("").expect(200);
+        });
+    });
+    describe("/game/:gameId GET route...", () => {
         test(`Should return status code 400 if provided gameId is not a valid
          MongoDB ObjectId`, async () => {
             const gameId = null;
