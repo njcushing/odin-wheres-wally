@@ -20,6 +20,13 @@ const gameNotFound = (gameId) => {
     return createError(404, `Specified game not found at: ${gameId}.`);
 };
 
+export const gamesGet = asyncHandler(async (req, res, next) => {
+    let games = await Game.find().exec();
+    return successfulRequest(res, 200, "Game(s) found", {
+        games: games,
+    });
+});
+
 export const gameGet = asyncHandler(async (req, res, next) => {
     const gameId = req.params.gameId;
     validateGameId(next, gameId);
