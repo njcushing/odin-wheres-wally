@@ -7,7 +7,7 @@ import '@testing-library/jest-dom'
 import { forwardRef } from 'react'
 import HighScores from './index.jsx'
 
-const renderComponent = () => {
+const renderComponent = async () => {
     render(<HighScores />);
 }
 
@@ -63,14 +63,14 @@ vi.mock('./utils/getHighScores', () => {
 describe("UI/DOM Testing...", () => {
     describe("The high scores title element...", () => {
         test("Should exist on the page", async () => {
-            renderComponent();
+            await act(() => renderComponent());
             const highScoresTitle = screen.getByRole("heading", { name: "high-scores-title" });
             expect(highScoresTitle).toBeInTheDocument();
         });
     });
     describe("The high scores list...", () => {
-        test("Should exist on the page", () => {
-            renderComponent();
+        test("Should exist on the page", async () => {
+            await act(() => renderComponent());
             const highScoresList = screen.getByRole("list", { name: "high-scores-list" });
             expect(highScoresList).toBeInTheDocument();
         });
