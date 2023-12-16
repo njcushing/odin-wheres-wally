@@ -23,7 +23,6 @@ export const getGameInformation = async (gameId, restarting) => {
             throw new Error(error);
         });
     if (data) {
-        console.log(data.gameInfo);
         localStorage.setItem("authToken", data.token);
         return {
             gameInfo: {
