@@ -64,7 +64,9 @@ export const highscorePost = [
     asyncHandler(async (req, res, next) => {
         const gameId = req.params.gameId;
         if (!validateGameId(next, gameId)) return;
-        let game = await Game.findById(gameId).exec();
+        let game = await Game.findById(gameId)
+            .populate({ path: "characters", populate: { path: "character" } })
+            .exec();
         if (game === null) return next(gameNotFound(gameId));
 
         const errors = validationResult(req);
