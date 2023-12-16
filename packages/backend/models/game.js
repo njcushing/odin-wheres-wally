@@ -5,6 +5,7 @@ import CharacterSchema from "./character.js";
 const Schema = mongoose.Schema;
 
 const GameSchema = new Schema({
+    name: { type: String },
     imageUrl: { type: String },
     imageWidth: { type: Number },
     imageHeight: { type: Number },
