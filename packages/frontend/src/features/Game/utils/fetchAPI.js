@@ -1,8 +1,8 @@
-export const getGameInformation = async (restarting) => {
+export const getGameInformation = async (gameId, restarting) => {
     if (restarting) localStorage.removeItem("authToken");
 
     const data = await fetch(
-        `${import.meta.env.VITE_SERVER_DOMAIN}/game/6572fc2d12becab50ff4f90f`,
+        `${import.meta.env.VITE_SERVER_DOMAIN}/game/${gameId}`,
         {
             method: "GET",
             mode: "cors",
@@ -23,6 +23,7 @@ export const getGameInformation = async (restarting) => {
             throw new Error(error);
         });
     if (data) {
+        console.log(data.gameInfo);
         localStorage.setItem("authToken", data.token);
         return {
             gameInfo: {
@@ -41,7 +42,11 @@ export const getGameInformation = async (restarting) => {
     }
 };
 
-export const postCharacterSelection = async (characterId, clickPosition) => {
+export const postCharacterSelection = async (
+    gameId,
+    characterId,
+    clickPosition
+) => {
     const body = {
         click_position: clickPosition,
     };
@@ -49,7 +54,7 @@ export const postCharacterSelection = async (characterId, clickPosition) => {
     return await fetch(
         `${
             import.meta.env.VITE_SERVER_DOMAIN
-        }/game/6572fc2d12becab50ff4f90f/character/${characterId}/check-position`,
+        }/game/${gameId}/character/${characterId}/check-position`,
         {
             method: "POST",
             mode: "cors",
@@ -76,16 +81,14 @@ export const postCharacterSelection = async (characterId, clickPosition) => {
         });
 };
 
-export const postHighScoreSubmission = async (firstName, lastName) => {
+export const postHighScoreSubmission = async (gameId, firstName, lastName) => {
     const body = {
         first_name: firstName,
         last_name: lastName,
     };
 
     const response = await fetch(
-        `${
-            import.meta.env.VITE_SERVER_DOMAIN
-        }/game/6572fc2d12becab50ff4f90f/high-scores`,
+        `${import.meta.env.VITE_SERVER_DOMAIN}/game/${gameId}/high-scores`,
         {
             method: "POST",
             mode: "cors",

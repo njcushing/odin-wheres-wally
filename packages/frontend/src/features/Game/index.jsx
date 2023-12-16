@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import styles from "./index.module.css";
 
 import { v4 as uuidv4 } from "uuid";
@@ -11,6 +12,8 @@ import HighScoreForm from "./components/HighScoreForm";
 import TimeCounter from "./components/TimeCounter";
 
 const Game = () => {
+    const { gameId } = useParams();
+
     const [gameState, setGameState] = useState("waiting");
     const [gameInfo, setGameInfo] = useState({
         imageUrl: null,
@@ -48,7 +51,7 @@ const Game = () => {
 
     const startGame = (restarting) => {
         const getGameInfo = async () => {
-            const newInfo = await fetchAPI.getGameInformation(restarting);
+            const newInfo = await fetchAPI.getGameInformation(gameId, restarting);
             setGameInfo(newInfo.gameInfo);
             resetGame();
             setCharactersFound(newInfo.charactersFound);
@@ -69,7 +72,7 @@ const Game = () => {
 
     const characterSelected = (characterId, characterName, clickPosition) => {
         (async () => {
-            const response = await fetchAPI.postCharacterSelection(characterId, clickPosition);
+            const response = await fetchAPI.postCharacterSelection(gameId, characterId, clickPosition);
             if (response) {
                 setCharactersFound(response.charactersFound);
                 if (response.success) {
@@ -108,6 +111,7 @@ const Game = () => {
         }
 
         const status = await fetchAPI.postHighScoreSubmission(
+            gameId,
             formFields.first_name,
             formFields.last_name
         );
@@ -238,7 +242,7 @@ const Game = () => {
                 ?   <>
                     <img
                         className={styles["game-image"]}
-                        src={gameInfo.imageUrl}
+                        src={`/${gameInfo.imageUrl}`}
                         alt="Image containing the characters to locate."
                         onClick={clickedImage}
                         style={{
@@ -374,7 +378,7 @@ const Game = () => {
                                 <img
                                     className={styles["character-image"]}
                                     aria-label="character-image"
-                                    src={character.imageUrl}
+                                    src={`/${character.imageUrl}`}
                                     alt={character.name}
                                 ></img>   
                             {character.name}</li>
