@@ -131,6 +131,13 @@
     font-size: 0.8rem;
 }
 
+.no-high-scores-found-message {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.4rem;
+    font-family: Gabarito;
+    text-align: center;
+}
+
 .navigation-button {
     display: flex;
     justify-content: center;

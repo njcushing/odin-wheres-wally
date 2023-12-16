@@ -1,8 +1,6 @@
-const getHighScores = async () => {
+const getHighScores = async (gameId) => {
     const response = await fetch(
-        `${
-            import.meta.env.VITE_SERVER_DOMAIN
-        }/game/6572fc2d12becab50ff4f90f/high-scores`,
+        `${import.meta.env.VITE_SERVER_DOMAIN}/game/${gameId}/high-scores`,
         {
             method: "GET",
             mode: "cors",
