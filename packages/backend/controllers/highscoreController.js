@@ -91,6 +91,16 @@ export const highscorePost = [
                     return next(createError(401, `Invalid auth token.`));
                 }
 
+                // Check if high-score being submitted for correct gameId
+                if (token.gameId.toString() !== gameId) {
+                    return next(
+                        createError(
+                            400,
+                            `The high-score is not being submitted for the correct game.`
+                        )
+                    );
+                }
+
                 // Check if game is won
                 if (!checkGameWon(game, token)) {
                     return next(

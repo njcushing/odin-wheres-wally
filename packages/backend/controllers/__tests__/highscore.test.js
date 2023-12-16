@@ -133,6 +133,26 @@ describe("Route testing...", () => {
                 .set("Accept", "application/json")
                 .expect(401);
         });
+        test(`Should return status code 400 if the high-score is not being
+         submitted for the correct game`, async () => {
+            const gameId = games[0]._id;
+            checkTokenState.mockReturnValueOnce([
+                {
+                    id: new mongoose.Types.ObjectId(),
+                    dateStarted: Date.now(),
+                    timeTaken: null,
+                    gameId: new mongoose.Types.ObjectId(), // Mocking incorrect gameId
+                    charactersFound: [],
+                },
+                false, // Mocking valid token
+            ]);
+            await request(app)
+                .post(`/${gameId}/high-scores`)
+                .send({ first_name: "John", last_name: "Smith" })
+                .set("Content-Type", "application/json")
+                .set("Accept", "application/json")
+                .expect(400);
+        });
         test(`Should return status code 400 if game is not yet won`, async () => {
             const gameId = games[0]._id;
             checkTokenState.mockReturnValueOnce([
