@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Landing from "@/pages/Landing";
+import GameSelection from "@/pages/GameSelection";
 import Play from "@/pages/Play";
 import HighScores from "@/pages/HighScores";
 
@@ -14,13 +15,23 @@ const Router = () => {
             errorElement: <ErrorPage />,
         },
         {
-            path: "/play",
+            path: "/play/:gameId",
             element: <Play />,
             errorElement: <ErrorPage />,
         },
         {
-            path: "/high-scores",
+            path: "/play",
+            element: <GameSelection />,
+            errorElement: <ErrorPage />,
+        },
+        {
+            path: "/high-scores/:gameId",
             element: <HighScores />,
+            errorElement: <ErrorPage />,
+        },
+        {
+            path: "/high-scores",
+            element: <GameSelection />,
             errorElement: <ErrorPage />,
         },
     ]);
