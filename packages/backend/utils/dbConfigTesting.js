@@ -89,6 +89,7 @@ const initialiseMongoServer = async () => {
                 "src/assets/images/characters/wizard.png"
             ),
             newCharacter(4, "Odlaw", "src/assets/images/characters/odlaw.png"),
+            newCharacter(5, "Test", ""), // Character not in scene
         ]);
     }
 
