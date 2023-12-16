@@ -10,12 +10,12 @@ const getGames = async () => {
                 return response.json();
             }
         })
-        .then((response) => response.data)
+        .then((response) => response)
         .catch((error) => {
             throw new Error(error);
         });
     if (response) {
-        return response;
+        return response.data.games;
     } else {
         return [];
     }
