@@ -86,10 +86,12 @@ export const characterCheckPosition = [
 
         const charInfo = isCharacterInScene(game, character);
         if (!charInfo) {
-            return createError(
-                404,
-                `Specified character exists at: ${character._id}, but it is not
-                present in the current scene.`
+            return next(
+                createError(
+                    404,
+                    `Specified character exists at: ${character._id}, but it is
+                    not present in the current scene.`
+                )
             );
         }
 
